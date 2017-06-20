@@ -13,7 +13,7 @@ node{
         // mavenLocalRepo: '.repository'
         ) {
 
-      sh 'spring-boot/sample-microservices-springboot'
+      sh 'cd spring-boot/sample-microservices-springboot'
  
       // Run the maven build
       sh "mvn clean install"
