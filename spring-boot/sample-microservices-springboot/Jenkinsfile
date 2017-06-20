@@ -2,7 +2,7 @@
 node{
   stage ('Build') {
  
-    git url: 'https://172.17.4.50:10080/root/osev3-examples'
+    git url: 'http://172.17.4.50:10080/root/osev3-examples'
     
     dir 'spring-boot/sample-microservices-springboot/'
  
