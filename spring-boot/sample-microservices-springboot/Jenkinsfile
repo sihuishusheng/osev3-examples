@@ -3,9 +3,7 @@ node{
   stage ('Build') {
  
     git url: 'http://172.17.4.50:10080/root/osev3-examples'
-    
-    dir 'spring-boot/sample-microservices-springboot/'
- 
+     
     withMaven(
         // Maven installation declared in the Jenkins "Global Tool Configuration"
         maven: 'M3',
@@ -14,6 +12,8 @@ node{
         // mavenSettingsConfig: 'my-maven-settings',
         // mavenLocalRepo: '.repository'
         ) {
+
+      sh 'spring-boot/sample-microservices-springboot'
  
       // Run the maven build
       sh "mvn clean install"
