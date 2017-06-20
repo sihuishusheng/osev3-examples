@@ -6,10 +6,8 @@ node{
      
     def mvnHome = tool 'M3'
 
-    dir 'spring-boot/sample-microservices-springboot'
-
     //sh "mvn clean install"
-    sh "${mvnHome}/bin/mvn clean install"
+    sh "cd spring-boot/sample-microservices-springboot && ${mvnHome}/bin/mvn clean install"
 
   }
 }
