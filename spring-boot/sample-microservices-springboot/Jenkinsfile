@@ -3,12 +3,13 @@ node{
   stage ('Build') {
  
     git url: 'http://172.17.4.50:10080/root/osev3-examples'
-     
-    //def mvnHome = tool 'M3'
 
     sh 'cd spring-boot/sample-microservices-springboot'
+     
+    def mvnHome = tool 'M3'
 
-    sh "mvn clean install"
+    //sh "mvn clean install"
+    sh "${mvnHome}/bin/mvn clean install"
 
   }
 }
