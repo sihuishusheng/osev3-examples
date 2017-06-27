@@ -70,5 +70,18 @@
             </plugin>
         </plugins>
     </build>
+	
+	<distributionManagement>	
+	    <repository>
+	        <id>my-releases</id>
+	        <name>My internal repository</name>
+	        <url>http://172.17.4.50:8081/content/repositories/releases</url>
+	    </repository>
+	    <snapshotRepository>
+	        <id>my-snapshots</id>
+	        <name>My internal repository</name>
+	        <url>http://172.17.4.50:8081/content/repositories/snapshots</url>
+	    </snapshotRepository>
+	</distributionManagement>
 
 </project>

@@ -14,4 +14,94 @@
         <module>web</module>
         <module>repositories-mem</module>
     </modules>
+
+    <repositories>
+        <repository>
+            <id>my-synced</id>
+            <url>http://172.17.4.50:8081/content/repositories/allsynced</url>
+            <releases>
+			    <enabled>true</enabled>
+		    </releases>
+            <snapshots>
+			    <enabled>true</enabled>
+			</snapshots>
+        </repository>
+        <repository>
+            <id>my-mirror</id>
+            <url>http://172.17.4.50:8081/content/groups/public</url>
+		</repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>my-synced</id>
+            <url>http://172.17.4.50:8081/content/repositories/allsynced</url>
+            <releases>
+			    <enabled>true</enabled>
+			</releases>
+            <snapshots>
+			    <enabled>true</enabled>
+			</snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>my-mirror</id>
+            <url>http://172.17.4.50:8081/content/groups/public</url>
+		</pluginRepository>
+    </pluginRepositories>
+	
+	<distributionManagement>	
+	    <repository>
+	        <id>my-releases</id>
+	        <name>My internal repository</name>
+	        <url>http://172.17.4.50:8081/content/repositories/releases</url>
+	    </repository>
+	    <snapshotRepository>
+	        <id>my-snapshots</id>
+	        <name>My internal repository</name>
+	        <url>http://172.17.4.50:8081/content/repositories/snapshots</url>
+	    </snapshotRepository>
+	</distributionManagement>
+	
+	<build>
+	  <plugins>
+		<plugin>
+		   <groupId>org.apache.maven.plugins</groupId>
+		   <artifactId>maven-deploy-plugin</artifactId>
+		   <version>2.8.2</version>
+		   <executions>
+		      <execution>
+		         <id>default-deploy</id>
+		         <phase>deploy</phase>
+		         <goals>
+		            <goal>deploy</goal>
+		         </goals>
+		      </execution>
+		   </executions>
+	       <configuration>
+	         <skip>true</skip>
+	       </configuration>
+		</plugin>	
+	
+	    <plugin>
+	      <groupId>org.sonatype.plugins</groupId>
+	      <artifactId>nexus-staging-maven-plugin</artifactId>
+		  <version>1.6.8</version>
+	      <executions>
+	        <execution>
+	          <id>default-deploy</id>
+	          <phase>deploy</phase>
+	          <goals>
+	            <goal>deploy</goal>
+	          </goals>
+	        </execution>
+	      </executions>
+	      <configuration>
+	        <serverId>my-snapshots</serverId>
+	        <nexusUrl>http://localhost:8081/</nexusUrl>
+	        <!-- explicit matching using the staging profile id -->
+	        <stagingProfileId>staging</stagingProfileId>
+	      </configuration>
+	    </plugin>
+	  </plugins>
+	</build>
 </project>
