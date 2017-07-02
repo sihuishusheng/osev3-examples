@@ -1,0 +1,192 @@
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'maven'
+// apply plugin: 'java-library-distribution'
+// apply plugin: 'war'
+apply plugin: 'application'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.springframework.boot'
+
+archivesBaseName = "web"
+version = '0.0.1'
+group = 'com.openshift.evangelists.microservices-demo-springboot'
+
+mainClassName = 'com.openshift.evangelists.microservices.web.SampleWebUIApplication'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+configurations {
+    deployerJars
+    
+    provided
+    // compile.extendsFrom(provided)
+
+    // archives.extendsFrom(testCompile)
+}
+
+sourceSets {
+    main.compileClasspath += configurations.provided
+    test.compileClasspath += configurations.provided
+    test.runtimeClasspath += configurations.provided
+}
+
+compileJava {
+  options.encoding = 'UTF-8'
+  // Add unchecked once we drop support for Java 7 as @SuppressWarnings("unchecked") is too buggy in Java 7
+  options.compilerArgs << "-Xlint:deprecation"
+}
+
+jar {
+    baseName = "${archivesBaseName}"
+    version =  "${version}"
+    // from { configurations.runtime.collect { it.directory ? it : zipTree(it) } }
+}
+
+task sourcesJar(type: Jar, dependsOn:classes) {
+     classifier = 'sources'
+     from sourceSets.main.allSource
+}
+ 
+task javadocJar(type: Jar, dependsOn:javadoc) {
+     classifier = 'javadoc'
+     from javadoc.destinationDir
+}
+
+artifacts {
+     archives jar
+     // archives sourcesJar
+     // archives javadocJar
+}
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat = 'full'
+    }
+}
+
+task testJar(type: Jar) {
+    classifier = 'test'
+    from sourceSets.test.output
+}
+
+repositories {
+    // jcenter()
+    // mavenLocal()
+    // mavenCentral()
+    maven {
+        url "http://172.17.4.50:8081/content/groups/public"
+    }
+	// maven { url "http://repo.spring.io/release" }
+	// maven { url "http://repo.spring.io/milestone" }
+	// maven { url "http://repo.spring.io/snapshot" }
+    maven {
+        url "http://172.17.4.50:8081/content/repositories/allsynced"
+    }
+}
+
+install {
+    repositories.mavenInstaller {
+        // pom.version = ${version}
+        // pom.artifactId = ${archivesBaseName}
+        // pom.groupId = ${group}
+    }
+}
+
+uploadArchives {
+    repositories {
+        // configuration = configurations.deployerJars
+        configuration = configurations.archives
+        mavenDeployer {
+            repository(url: "http://172.17.4.50:8081/content/repositories/releases"){
+                authentication(userName: "admin", password: "admin123")
+            }
+            pom {
+                project {
+                   name "${archivesBaseName}"
+                   description project.description
+                   packaging 'jar'
+                   url 'https://github.com/tangfeixiong/osev3-examples'
+                   parent {
+                        // groupId "org.springframework.boot"
+                        // artifactId "spring-boot-starter-parent"
+                        // version "1.5.4.RELEASE"
+                        groupId "com.openshift.evangelists"
+                        artifactId "microservices-demo-springboot"
+                        version "0.0.1"
+                    }
+                    // dependencyManagement {
+                    //     dependencies {
+                    //         dependency {
+                    //             groupId "org.springframework.boot"
+                    //             artifactId "spring-boot-dependencies"
+                    //             version "1.5.4.RELEASE"
+                    //             type "pom"
+                    //             scope "import"
+                    //         }
+                    //     }
+                    // }
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    // compile "org.apache.kafka:connect-api:0.9.0.0"
+    // compile "com.zendesk:maxwell:0.14.6"
+    // compile "org.slf4j:slf4j-api:1.7.6"
+    compile "org.hibernate:hibernate-validator:5.1.1.Final"
+    compile "org.springframework:spring-web:4.2.8.RELEASE"
+    compile "com.fasterxml.jackson.core:jackson-databind:2.8.7"
+    
+    provided "org.projectlombok:lombok:1.16.2"
+
+	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+	compile("org.springframework.boot:spring-boot-starter-actuator")
+	compile("org.springframework.boot:spring-boot-starter-jdbc")
+	compile("org.springframework.boot:spring-boot-starter-security")
+	compile("org.springframework.boot:spring-boot-starter-web")
+    
+	// runtime("com.h2database:h2")
+
+	compileOnly('org.springframework.boot:spring-boot-configuration-processor')
+	testCompile("org.springframework.boot:spring-boot-starter-test")
+    
+    testCompile "junit:junit:4.11"
+    testCompile "org.easymock:easymock:3.3.1"
+    testCompile "org.powermock:powermock-module-junit4:1.6.2"
+    testCompile "org.powermock:powermock-api-easymock:1.6.2"
+    // testRuntime "org.slf4j:slf4j-log4j12:1.7.6"
+    testRuntime "org.slf4j:log4j-over-slf4j:1.7.6"
+    
+    deployerJars "org.apache.maven.wagon:wagon-http:2.2"    
+}
+
+springBoot {
+	// buildInfo()
+    // enabled = false
+    backupSource = false
+}
+
+bootRun {
+    // enabled = false
+    addResources = true
+}
+
+bootRepackage.withJarTask = jar
+bootRepackage {
+    // enabled = false
+    mainClass = "${mainClassName}"
+}
+
+// dependencyManagement {
+//   imports {
+//     mavenBom 'io.spring.platform:platform-bom:2.0.8.RELEASE'
+//     mavenBom 'org.springframework.boot:spring-boot-starter-parent:1.5.4.RELEASE'
+//   }
+// }
+

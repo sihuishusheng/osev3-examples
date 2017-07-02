@@ -1,0 +1,448 @@
+
+import org.ajoberstar.grgit.Grgit
+
+buildscript {
+	ext {
+		springBootVersion = '1.5.4.RELEASE'
+        appVersion = '0.0.1'
+	}
+
+    // apply from: file('gradle/buildscript.gradle'), to: buildscript
+
+    repositories {
+        // jcenter()
+        // mavenLocal()
+        // mavenCentral()
+        maven {
+            url "http://172.17.4.50:8081/content/groups/public"
+        }
+		// maven { url "http://repo.spring.io/release" }
+		// maven { url "http://repo.spring.io/milestone" }
+		// maven { url "http://repo.spring.io/snapshot" }
+        maven {
+            url "http://172.17.4.50:8081/content/repositories/allsynced"
+        }
+    }
+    
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    
+        // For Apache Rat plugin to ignore non-Git files
+        classpath "org.ajoberstar:grgit:1.9.2"
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
+        classpath 'org.scoverage:gradle-scoverage:2.1.0'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
+    }
+}
+
+allprojects {
+  apply plugin: 'idea'
+  apply plugin: "jacoco"
+
+  repositories {
+    // jcenter()
+    // mavenLocal()
+    // mavenCentral()
+    maven {
+      url "http://172.17.4.50:8081/content/groups/public"
+    }
+	// maven { url "http://repo.spring.io/release" }
+	// maven { url "http://repo.spring.io/milestone" }
+	// maven { url "http://repo.spring.io/snapshot" }
+    maven {
+      url "http://172.17.4.50:8081/content/repositories/allsynced"
+    }
+  }
+
+  apply plugin: 'com.github.ben-manes.versions'
+
+  dependencyUpdates {
+    revision="release"
+    resolutionStrategy = {
+      componentSelection { rules ->
+        rules.all { ComponentSelection selection ->
+          boolean rejected = ['snap', 'alpha', 'beta', 'rc', 'cr', 'm'].any { qualifier ->
+            selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
+          }
+          if (rejected) {
+            selection.reject('Release candidate')
+          }
+        }
+      }
+    }
+  }
+
+  if (JavaVersion.current().isJava8Compatible()) {
+    tasks.withType(Javadoc) {
+      // disable the crazy super-strict doclint tool in Java 8
+      // noinspection SpellCheckingInspection
+      options.addStringOption('Xdoclint:none', '-quiet')
+    }
+  }
+}
+
+ext {
+  gradleVersion = "3.5"
+
+  maxPermSizeArgs = []
+  if (!JavaVersion.current().isJava8Compatible())
+    maxPermSizeArgs = ['-XX:MaxPermSize=512m']
+
+  userMaxForks = project.hasProperty('maxParallelForks') ? maxParallelForks.toInteger() : null
+
+  skipSigning = project.hasProperty('skipSigning') && skipSigning.toBoolean()
+  shouldSign = !skipSigning && !version.endsWith("SNAPSHOT") && project.gradle.startParameter.taskNames.any { it.contains("upload") }
+
+  mavenUrl = project.hasProperty('mavenUrl') ? project.mavenUrl : ''
+  mavenUsername = project.hasProperty('mavenUsername') ? project.mavenUsername : ''
+  mavenPassword = project.hasProperty('mavenPassword') ? project.mavenPassword : ''
+
+  userShowStandardStreams = project.hasProperty("showStandardStreams") ? showStandardStreams : null
+
+  userTestLoggingEvents = project.hasProperty("testLoggingEvents") ? Arrays.asList(testLoggingEvents.split(",")) : null
+
+  generatedDocsDir = new File("${project.rootDir}/docs/generated")
+}    
+
+if (new File('.git').exists()) {
+  apply from: file('gradle/rat.gradle')
+  rat {
+    // Exclude everything under the directory that git should be ignoring via .gitignore or that isn't checked in. These
+    // restrict us only to files that are checked in or are staged.
+    def repo = Grgit.open(project.file('.'))
+    excludes = new ArrayList<String>(repo.clean(ignore: false, directories: true, dryRun: true))
+    // And some of the files that we have checked in should also be excluded from this check
+    excludes.addAll([
+        '**/.git/**',
+        '**/build/**',
+        'CONTRIBUTING.md',
+        'gradlew',
+        'gradlew.bat',
+        '**/README.md',
+        '**/id_rsa',
+        '**/id_rsa.pub',
+        'checkstyle/suppressions.xml'
+    ])
+  }
+}
+
+subprojects {
+  apply plugin: 'java'
+  if (!project.name.equals('repository-mem')) {
+    apply plugin: 'eclipse'
+    fineTuneEclipseClasspathFile(eclipse, project)
+  }
+  apply plugin: 'maven'
+  // apply plugin: 'java-library-distribution'
+  // apply plugin: 'war'
+  
+  apply plugin: 'org.springframework.boot'
+  apply plugin: 'io.spring.dependency-management'
+
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
+
+  compileJava {
+    options.encoding = 'UTF-8'
+    // Add unchecked once we drop support for Java 7 as @SuppressWarnings("unchecked") is too buggy in Java 7
+    options.compilerArgs << "-Xlint:deprecation"
+  }
+
+  install {
+    repositories.mavenInstaller {
+      // pom.version = ${version}
+      // pom.artifactId = ${archivesBaseName}
+      // pom.groupId = ${group}
+    }
+  }
+
+  uploadArchives {
+    repositories {
+      // configuration = configurations.deployerJars
+      mavenDeployer {
+        // repository(url: "${mavenUrl}") {
+        //   authentication(userName: "${mavenUsername}", password: "${mavenPassword}")
+        // }
+        repository(url: "http://172.17.4.50:8081/content/repositories/releases"){
+          authentication(userName: "admin", password: "admin123")
+        }
+        afterEvaluate {
+          pom.artifactId = "${archivesBaseName}"
+          pom.project {
+            name 'Example App'
+            packaging 'jar'
+            url 'http://app.example.com'
+          }
+        }
+      }
+    }
+  }
+
+  def testLoggingEvents = ["passed", "skipped", "failed"]
+  def testShowStandardStreams = false
+  def testExceptionFormat = 'full'
+
+  test {
+    maxParallelForks = userMaxForks ?: Runtime.runtime.availableProcessors()
+
+    minHeapSize = "256m"
+    maxHeapSize = "2048m"
+    jvmArgs = maxPermSizeArgs
+
+    testLogging {
+      events = userTestLoggingEvents ?: testLoggingEvents
+      showStandardStreams = userShowStandardStreams ?: testShowStandardStreams
+      exceptionFormat = testExceptionFormat
+    }
+  }
+
+  task integrationTest(type: Test, dependsOn: compileJava) {
+    maxParallelForks = userMaxForks ?: Runtime.runtime.availableProcessors()
+
+    minHeapSize = "256m"
+    maxHeapSize = "2048m"
+    jvmArgs = maxPermSizeArgs
+
+    testLogging {
+      events = userTestLoggingEvents ?: testLoggingEvents
+      showStandardStreams = userShowStandardStreams ?: testShowStandardStreams
+      exceptionFormat = testExceptionFormat
+    }
+    useJUnit {
+      includeCategories 'com.openshift.evangelists.microservices.test.IntegrationTest'
+    }
+  }
+
+  task unitTest(type: Test, dependsOn: compileJava) {
+    maxParallelForks = userMaxForks ?: Runtime.runtime.availableProcessors()
+
+    minHeapSize = "256m"
+    maxHeapSize = "2048m"
+    jvmArgs = maxPermSizeArgs
+
+    testLogging {
+      events = userTestLoggingEvents ?: testLoggingEvents
+      showStandardStreams = userShowStandardStreams ?: testShowStandardStreams
+      exceptionFormat = testExceptionFormat
+    }
+    useJUnit {
+      excludeCategories 'com.openshift.evangelists.microservices.test.IntegrationTest'
+    }
+  }
+
+  jar {
+    // from "$rootDir/LICENSE"
+    // from "$rootDir/NOTICE"
+    from "$rootDir/CHANGELOG"
+  }
+
+  task srcJar(type: Jar) {
+    classifier = 'sources'
+    // from "$rootDir/LICENSE"
+    // from "$rootDir/NOTICE"
+    from "$rootDir/README.md"
+    from sourceSets.main.allSource
+  }
+
+  // task javadocJar(type: Jar, dependsOn: javadoc) {
+  //   classifier 'javadoc'
+  //   from "$rootDir/LICENSE"
+  //   from "$rootDir/NOTICE"
+  //   from javadoc.destinationDir
+  // }
+
+  // task docsJar(dependsOn: javadocJar)
+
+  javadoc {
+    options.charSet = 'UTF-8'
+    options.docEncoding = 'UTF-8'
+    options.encoding = 'UTF-8'
+  }
+
+  task systemTestLibs(dependsOn: jar)
+
+  artifacts {
+    archives srcJar
+    // archives javadocJar
+  }
+
+    jacocoTestReport {
+      dependsOn tasks.test
+      sourceSets sourceSets.main
+      reports {
+        html.enabled = true
+        xml.enabled = true
+        csv.enabled = false
+      }
+    }
+    
+  task reportCoverage(dependsOn: jacocoTestReport)
+}
+
+apply plugin: 'java'
+// apply plugin: 'eclipse'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+// apply plugin: 'java-library-distribution'
+// apply plugin: 'war'
+  
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+    
+archivesBaseName = 'microservices-demo-springboot'
+version = appVersion
+group = 'com.openshift.evangelists'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+configurations {
+    pomCreation
+    deployerJars
+}
+configurations.archives.with {
+    artifacts.remove file("${buildDir}/libs/${archivesBaseName}-${version}.jar")
+}
+
+jar {
+    from { configurations.runtime.collect { it.directory ? it : zipTree(it) } }
+}
+// jar.enabled = false
+bootRepackage.enabled = false
+
+artifacts {
+    archives jar
+    // archives sourcesJar
+    // archives javadocJar
+}
+
+configure(install.repositories.mavenInstaller) {
+    // Discard all the dependencies from the POM, as they are packaged in the JAR.
+    pom.scopeMappings.mappings.clear()
+}
+
+task createPom {
+    ext.newPomFile = "${buildDir}/libs/${archivesBaseName}-${version}.pom"
+    doLast {
+        pom {
+            project {
+                packaging 'pom'
+            }
+        }.writeTo(newPomFile)
+    }
+}
+
+install.dependsOn(createPom)
+install {
+  repositories.mavenInstaller {
+    // pom.version = ${version}
+    // pom.artifactId = ${archivesBaseName}
+    // pom.groupId = ${group}
+    
+    // Discard all the dependencies from the POM, as they are packaged in the JAR.
+    pom.scopeMappings.mappings.clear()
+  }
+}
+
+uploadArchives {
+  repositories {
+    // configuration = configurations.deployerJars
+    mavenDeployer {
+      // repository(url: "${mavenUrl}") {
+      //   authentication(userName: "${mavenUsername}", password: "${mavenPassword}")
+      // }
+      repository(url: "http://172.17.4.50:8081/content/repositories/releases"){
+        authentication(userName: "admin", password: "admin123")
+      }
+    
+      // Discard all the dependencies from the POM, as they are packaged in the JAR.
+      pom.scopeMappings.mappings.clear()
+            
+      pom {
+        project {
+          name "${archivesBaseName}"
+          packaging 'jar'
+          url 'https://github.com/tangfeixiong/osev3-examples'
+        }
+      }
+    }
+  }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId "${group}"
+            artifactId "${archivesBaseName}"
+            version "${version}"
+
+            from components.java
+
+            // pom.withXml{
+            //     def xml = asNode()
+            //     xml.children().last() + {               
+            //         delegate.dependencies {
+            //             delegate.dependency {
+            //                 delegate.groupId 'org.springframework'
+            //                 delegate.artifactId 'spring-context'
+            //                 delegate.version( '3.2.8.RELEASE' )
+            //             }
+            //         }
+            //     }
+            // }
+        }
+    }
+}
+
+dependencies {
+    // compile "org.apache.kafka:connect-api:0.9.0.0"
+    // compile "com.zendesk:maxwell:0.14.6"
+    // compile "org.slf4j:slf4j-api:1.7.6"
+    
+	// runtime("com.h2database:h2")
+    
+    testCompile "junit:junit:4.11"
+    testCompile "org.easymock:easymock:3.3.1"
+    testCompile "org.powermock:powermock-module-junit4:1.6.2"
+    testCompile "org.powermock:powermock-api-easymock:1.6.2"
+    // testRuntime "org.slf4j:slf4j-log4j12:1.7.6"
+    testRuntime "org.slf4j:log4j-over-slf4j:1.7.6"
+    
+    deployerJars "org.apache.maven.wagon:wagon-http:2.2"    
+}
+
+def fineTuneEclipseClasspathFile(eclipse, project) {
+  eclipse.classpath.file {
+    beforeMerged { cp ->
+      cp.entries.clear()
+      // for the core project add the directories defined under test/scala as separate source directories
+      if (project.name.equals('core')) {
+        cp.entries.add(new org.gradle.plugins.ide.eclipse.model.SourceFolder("src/test/scala/integration", null))
+        cp.entries.add(new org.gradle.plugins.ide.eclipse.model.SourceFolder("src/test/scala/other", null))
+        cp.entries.add(new org.gradle.plugins.ide.eclipse.model.SourceFolder("src/test/scala/unit", null))
+      }
+    }
+    whenMerged { cp ->
+      // for the core project exclude the separate sub-directories defined under test/scala. These are added as source dirs above
+      if (project.name.equals('core')) {
+        cp.entries.findAll { it.kind == "src" && it.path.equals("src/test/scala") }*.excludes = ["integration/", "other/", "unit/"]
+      }
+      /* 
+       * Set all eclipse build output to go to 'build_eclipse' directory. This is to ensure that gradle and eclipse use different 
+       * build output directories, and also avoid using the eclpise default of 'bin' which clashes with some of our script directories.
+       * https://discuss.gradle.org/t/eclipse-generated-files-should-be-put-in-the-same-place-as-the-gradle-generated-files/6986/2
+       */
+      cp.entries.findAll { it.kind == "output" }*.path = "build_eclipse"
+      /*
+       * Some projects have explicitly added test output dependencies. These are required for the gradle build but not required
+       * in Eclipse since the dependent projects are added as dependencies. So clean up these from the generated classpath.
+       */
+      cp.entries.removeAll { it.kind == "lib" && it.path.matches(".*/build/(classes|resources)/test") }
+    }
+  }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.3'
+}

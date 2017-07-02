@@ -1,0 +1,6 @@
+
+rootProject.name = 'sample-microservices-springboot'
+
+include 'web', 'repositories-mem'
+
+// rootProject.children.each { it.name = rootProject.name + "-" + it.name }

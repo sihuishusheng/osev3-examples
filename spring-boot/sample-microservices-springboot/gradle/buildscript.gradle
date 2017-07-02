@@ -1,0 +1,9 @@
+
+repositories {
+  repositories {
+    // For license plugin.
+    maven {
+      url 'http://dl.bintray.com/content/netflixoss/external-gradle-plugins/'
+    }
+  }
+}
