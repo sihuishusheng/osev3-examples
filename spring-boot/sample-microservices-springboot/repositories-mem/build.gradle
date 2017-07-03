@@ -9,6 +9,15 @@ apply plugin: 'application'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.springframework.boot'
 
+ext {
+    mavenUrl = project.hasProperty('mavenUrl') ? project.mavenUrl : ''
+    mavenUsername = project.hasProperty('mavenUsername') ? project.mavenUsername : ''
+    mavenPassword = project.hasProperty('mavenPassword') ? project.mavenPassword : ''
+
+    mavenNexusProxy = 'http://172.17.4.50:8081/content/groups/public'
+    mavenNexusOffline = 'http://172.17.4.50:8081/content/repositories/allsynced'    
+}
+
 archivesBaseName = "repositories-mem"
 version = '0.0.1'
 group = 'com.openshift.evangelists.microservices-demo-springboot'
@@ -78,13 +87,15 @@ repositories {
     // mavenLocal()
     // mavenCentral()
     maven {
-        url "http://172.17.4.50:8081/content/groups/public"
+        // url "http://172.17.4.50:8081/content/groups/public"
+        url "${mavenNexusProxy}"
     }
 	// maven { url "http://repo.spring.io/release" }
 	// maven { url "http://repo.spring.io/milestone" }
 	// maven { url "http://repo.spring.io/snapshot" }
     maven {
-        url "http://172.17.4.50:8081/content/repositories/allsynced"
+        // url "http://172.17.4.50:8081/content/repositories/allsynced"
+        url "${mavenNexusOffline}"
     }
 }
 
@@ -98,11 +109,14 @@ install {
 
 uploadArchives {
     repositories {
-        // configuration = configurations.deployerJars
-        configuration = configurations.archives
+        configuration = configurations.deployerJars
+        // configuration = configurations.archives
         mavenDeployer {
-            repository(url: "http://172.17.4.50:8081/content/repositories/releases"){
-                authentication(userName: "admin", password: "admin123")
+            // repository(url: "http://172.17.4.50:8081/content/repositories/releases"){
+            //   authentication(userName: "admin", password: "admin123")
+            // }
+            repository(url: "${mavenUrl}"){
+                authentication(userName: "${mavenUsername}", password: "${mavenPassword}")
             }
             pom {
                 project {

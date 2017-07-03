@@ -5,6 +5,8 @@ buildscript {
 	ext {
 		springBootVersion = '1.5.4.RELEASE'
         appVersion = '0.0.1'
+        mavenNexusProxy = 'http://172.17.4.50:8081/content/groups/public'
+        mavenNexusOffline = 'http://172.17.4.50:8081/content/repositories/allsynced'
 	}
 
     // apply from: file('gradle/buildscript.gradle'), to: buildscript
@@ -14,13 +16,13 @@ buildscript {
         // mavenLocal()
         // mavenCentral()
         maven {
-            url "http://172.17.4.50:8081/content/groups/public"
+            url "${mavenNexusProxy}"
         }
 		// maven { url "http://repo.spring.io/release" }
 		// maven { url "http://repo.spring.io/milestone" }
 		// maven { url "http://repo.spring.io/snapshot" }
         maven {
-            url "http://172.17.4.50:8081/content/repositories/allsynced"
+            url "${mavenNexusOffline}"
         }
     }
     
@@ -44,13 +46,13 @@ allprojects {
     // mavenLocal()
     // mavenCentral()
     maven {
-      url "http://172.17.4.50:8081/content/groups/public"
+      url mavenNexusProxy
     }
 	// maven { url "http://repo.spring.io/release" }
 	// maven { url "http://repo.spring.io/milestone" }
 	// maven { url "http://repo.spring.io/snapshot" }
     maven {
-      url "http://172.17.4.50:8081/content/repositories/allsynced"
+      url mavenNexusOffline
     }
   }
 
@@ -102,6 +104,9 @@ ext {
   userTestLoggingEvents = project.hasProperty("testLoggingEvents") ? Arrays.asList(testLoggingEvents.split(",")) : null
 
   generatedDocsDir = new File("${project.rootDir}/docs/generated")
+
+  mavenNexusProxy = 'http://172.17.4.50:8081/content/groups/public'
+  mavenNexusOffline = 'http://172.17.4.50:8081/content/repositories/allsynced'
 }    
 
 if (new File('.git').exists()) {
@@ -160,11 +165,8 @@ subprojects {
     repositories {
       // configuration = configurations.deployerJars
       mavenDeployer {
-        // repository(url: "${mavenUrl}") {
-        //   authentication(userName: "${mavenUsername}", password: "${mavenPassword}")
-        // }
-        repository(url: "http://172.17.4.50:8081/content/repositories/releases"){
-          authentication(userName: "admin", password: "admin123")
+        repository(url: "${mavenUrl}") {
+          authentication(userName: "${mavenUsername}", password: "${mavenPassword}")
         }
         afterEvaluate {
           pom.artifactId = "${archivesBaseName}"
@@ -298,8 +300,9 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 configurations {
-    pomCreation
     deployerJars
+
+    pomCreation
 }
 configurations.archives.with {
     artifacts.remove file("${buildDir}/libs/${archivesBaseName}-${version}.jar")
@@ -347,13 +350,11 @@ install {
 
 uploadArchives {
   repositories {
-    // configuration = configurations.deployerJars
+    configuration = configurations.deployerJars
+    // configuration = configurations.archives
     mavenDeployer {
-      // repository(url: "${mavenUrl}") {
-      //   authentication(userName: "${mavenUsername}", password: "${mavenPassword}")
-      // }
-      repository(url: "http://172.17.4.50:8081/content/repositories/releases"){
-        authentication(userName: "admin", password: "admin123")
+      repository(url: "${mavenUrl}") {
+        authentication(userName: "${mavenUsername}", password: "${mavenPassword}")
       }
     
       // Discard all the dependencies from the POM, as they are packaged in the JAR.
