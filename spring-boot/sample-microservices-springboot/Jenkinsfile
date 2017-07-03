@@ -9,7 +9,7 @@ node{
 
     // sh "cd spring-boot/sample-microservices-springboot && ${mvnHome}/bin/mvn clean install"
 
-    sh "cd spring-boot/sample-microservices-springboot && ${gradleHome}/bin/gradle build uploadArchives"
+    sh "cd spring-boot/sample-microservices-springboot && ${gradleHome}/gradle-3.5/bin/gradle build uploadArchives"
 
   }
 }
