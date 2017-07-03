@@ -2,7 +2,7 @@
 node{
   stage ('Build') {
  
-    git url: 'http://172.17.4.50:10080/root/osev3-examples'
+    git url: 'http://172.17.4.50:10080/root/osev3-examples', branch 'cicd'
      
     def mvnHome = tool 'M3'
     def gradleHome = tool 'G3'
