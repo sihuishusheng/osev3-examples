@@ -26,14 +26,19 @@ buildscript {
         }
     }
     
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-    
+    dependencies {    
         // For Apache Rat plugin to ignore non-Git files
         classpath "org.ajoberstar:grgit:1.9.2"
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
         classpath 'org.scoverage:gradle-scoverage:2.1.0'
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
+
+        // For Spring Boot app
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        
+        // For Docker
+        classpath 'com.bmuschko:gradle-docker-plugin:3.0.8'
+        classpath 'se.transmode.gradle:gradle-docker:1.2'
     }
 }
 

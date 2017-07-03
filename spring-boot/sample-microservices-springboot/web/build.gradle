@@ -8,6 +8,9 @@ apply plugin: 'maven'
 apply plugin: 'application'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'com.bmuschko.docker-remote-api'
+// apply plugin: 'com.bmuschko.gradle.docker.DockerRemoteApiPlugin'
+// apply plugin: 'docker' 
 
 ext {
     mavenUrl = project.hasProperty('mavenUrl') ? project.mavenUrl : ''
@@ -16,6 +19,17 @@ ext {
 
     mavenNexusProxy = 'http://172.17.4.50:8081/content/groups/public'
     mavenNexusOffline = 'http://172.17.4.50:8081/content/repositories/allsynced'    
+
+    dockerRegistryUsername = project.hasProperty('dockerRegistryUsername') ? project.dockerRegistryUsername : ''
+    dockerRegistryPassword = project.hasProperty('dockerRegistryPassword') ? project.dockerRegistryPassword : ''
+    dockerRegistryEmail = project.hasProperty('dockerRegistryEmail') ? project.dockerRegistryEmail : ''
+
+    dockerCertPath = '/etc/docker/certs.d/172.17.4.50:5000'
+    dockerfilePath = 'docker/Dockerfile.java-openjdk1.8-headless'
+    // dockerHub = 'https://index.docker.io/v1/'
+    dockerHub = 'https://172.17.4.50:5000'
+    dockerImageName = '172.17.4.50:5000/springboot-osev3-examples'
+    dockerImageTag = 'web'
 }
 
 archivesBaseName = "web"
@@ -204,3 +218,49 @@ bootRepackage {
 //   }
 // }
 
+task copyTask(type: Copy) {
+    from "${dockerfilePath}"
+    into "build/libs"
+    
+    rename 'Dockerfile.*', 'Dockerfile'    
+}
+
+docker {
+    // url = 'unix:///var/run/docker.sock'
+    // certPath = new File(System.properties['user.home'], '.docker')
+    certPath = file("${dockerCertPath}")
+
+    registryCredentials {
+        url = "${dockerHub}"
+        username = "${dockerRegistryUsername}"
+        password = "${dockerRegistryPassword}"
+        email = "${dockerRegistryEmail}"
+    }    
+}
+
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+
+task dockerBuild(type: DockerBuildImage, dependsOn: copyTask) {
+    inputDir = file("${buildDir}/libs")
+    dockerFile = file("${buildDir}/libs/Dockerfile")
+    tag = "${dockerImageName}:${dockerImageTag}"
+    buildArgs = ['app_version': "${version}"]
+}
+
+task dockerPush(type: DockerPushImage) {
+    dependsOn dockerBuild
+    imageName = "${dockerImageName}"
+    tag = "${dockerImageTag}"
+}
+
+task buildDocker(type: se.transmode.gradle.plugins.docker.DockerTask, dependsOn: copyTask) {
+    dockerfile = 'Dockerfile'
+    // registry = '172.17.4.50:5000'
+    // applicationName = "springboot-osev3-examples"
+    // tagVersion = 'web'
+    tag = "${dockerImageName}:${dockerImageTag}"
+    // runCommand 'echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list'
+    // runCommand "apt-get update"
+    // runCommand "apt-get install -y inotify-tools nginx apache2 openssh-server"
+}

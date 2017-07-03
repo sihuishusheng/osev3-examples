@@ -981,3 +981,581 @@ under the License.
   -->
 </settings>
 ```
+
+### Docker build and push
+
+With `gradle dockerBuild`
+```
+[vagrant@localhost sample-microservices-springboot]$ ./gradlew :web:dockerBuild
+:web:copyTask
+:web:dockerBuild
+Building image using context '/Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/web/build/libs'.
+Using Dockerfile '/Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/web/build/libs/Dockerfile'
+Using tag '172.17.4.50:5000/springboot-osev3-examples:web' for image.
+Step 1 : FROM docker.io/centos:centos7
+---> 34c4689f9727
+Step 2 : LABEL maintainer "tangfeixiong" mailto "tangfx128@gmail.com" project "https://github.com/tangfeixiong/osev3-examples/tree/cicd/spring-boot/sample-microservices-springboot" name "web"
+---> Using cache
+---> 83de36713f81
+Step 3 : ARG app_version=0.0.1
+---> Using cache
+---> c99de0c9229d
+Step 4 : ENV JAVA_HOME "/opt/java" JAVA_OPTIONS "-Xms128m -Xmx512m -XX:PermSize=128m -XX:MaxPermSize=256m" SERVER_PORT 8091
+---> Using cache
+---> 13abaa6e73a2
+Step 5 : COPY /web-${app_version}.jar /
+---> Using cache
+---> 130cb059d358
+Step 6 : RUN set -x     && install_pkgs="         tar         unzip         bc         which         lsof         java-1.8.0-openjdk-headless     "     && if [[ -z $localrepo_url ]]; then         yum install -y $install_pkgs;     else         curl -jkSL $localrepo_url -o /etc/yum.repos.d/local.repo;         yum install -y --disablerepo=\* --enablerepo=localbase,localrepo-\* $install_pkgs;     fi     && yum clean all -y     && export JAVA_OPTIONS="-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=128m"
+---> Running in 8e578f69deee
+[91m+ install_pkgs='         tar         unzip         bc         which         lsof         java-1.8.0-openjdk-headless     '
+
+[91m+ [[ -z '' ]]
++ yum install -y tar unzip bc which lsof java-1.8.0-openjdk-headless
+
+Loaded plugins: fastestmirror, ovl
+Determining fastest mirrors
+* base: ftp.tsukuba.wide.ad.jp
+* extras: centosv4.centos.org
+* updates: ftp.tsukuba.wide.ad.jp
+Resolving Dependencies
+--> Running transaction check
+---> Package bc.x86_64 0:1.06.95-13.el7 will be installed
+---> Package java-1.8.0-openjdk-headless.x86_64 1:1.8.0.131-3.b12.el7_3 will be installed
+--> Processing Dependency: tzdata-java >= 2015d for package: 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_64
+--> Processing Dependency: nss(x86-64) >= 3.28.4 for package: 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_64
+--> Processing Dependency: copy-jdk-configs >= 1.1-3 for package: 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_64
+--> Processing Dependency: chkconfig >= 1.7 for package: 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_64
+--> Processing Dependency: chkconfig >= 1.7 for package: 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_64
+--> Processing Dependency: lksctp-tools(x86-64) for package: 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_64
+--> Processing Dependency: libjpeg.so.62(LIBJPEG_6.2)(64bit) for package: 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_64
+--> Processing Dependency: jpackage-utils for package: 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_64
+--> Processing Dependency: libjpeg.so.62()(64bit) for package: 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_64
+--> Processing Dependency: libfreetype.so.6()(64bit) for package: 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_64
+---> Package lsof.x86_64 0:4.87-4.el7 will be installed
+---> Package tar.x86_64 2:1.26-29.el7 will be updated
+---> Package tar.x86_64 2:1.26-31.el7 will be an update
+---> Package unzip.x86_64 0:6.0-16.el7 will be installed
+---> Package which.x86_64 0:2.20-7.el7 will be installed
+--> Running transaction check
+---> Package chkconfig.x86_64 0:1.3.61-5.el7_2.1 will be updated
+---> Package chkconfig.x86_64 0:1.7.2-1.el7_3.1 will be an update
+---> Package copy-jdk-configs.noarch 0:1.2-1.el7 will be installed
+---> Package freetype.x86_64 0:2.4.11-12.el7 will be installed
+---> Package javapackages-tools.noarch 0:3.4.1-11.el7 will be installed
+--> Processing Dependency: python-javapackages = 3.4.1-11.el7 for package: javapackages-tools-3.4.1-11.el7.noarch
+--> Processing Dependency: libxslt for package: javapackages-tools-3.4.1-11.el7.noarch
+---> Package libjpeg-turbo.x86_64 0:1.2.90-5.el7 will be installed
+---> Package lksctp-tools.x86_64 0:1.0.17-2.el7 will be installed
+---> Package nss.x86_64 0:3.21.0-9.el7_2 will be updated
+--> Processing Dependency: nss = 3.21.0-9.el7_2 for package: nss-sysinit-3.21.0-9.el7_2.x86_64
+--> Processing Dependency: nss(x86-64) = 3.21.0-9.el7_2 for package: nss-tools-3.21.0-9.el7_2.x86_64
+---> Package nss.x86_64 0:3.28.4-1.2.el7_3 will be an update
+--> Processing Dependency: nss-util >= 3.28.2-1.1 for package: nss-3.28.4-1.2.el7_3.x86_64
+--> Processing Dependency: nspr >= 4.13.1 for package: nss-3.28.4-1.2.el7_3.x86_64
+--> Processing Dependency: libnssutil3.so(NSSUTIL_3.24)(64bit) for package: nss-3.28.4-1.2.el7_3.x86_64
+---> Package tzdata-java.noarch 0:2017b-1.el7 will be installed
+--> Running transaction check
+---> Package libxslt.x86_64 0:1.1.28-5.el7 will be installed
+---> Package nspr.x86_64 0:4.11.0-1.el7_2 will be updated
+---> Package nspr.x86_64 0:4.13.1-1.0.el7_3 will be an update
+---> Package nss-sysinit.x86_64 0:3.21.0-9.el7_2 will be updated
+---> Package nss-sysinit.x86_64 0:3.28.4-1.2.el7_3 will be an update
+---> Package nss-tools.x86_64 0:3.21.0-9.el7_2 will be updated
+---> Package nss-tools.x86_64 0:3.28.4-1.2.el7_3 will be an update
+---> Package nss-util.x86_64 0:3.21.0-2.2.el7_2 will be updated
+---> Package nss-util.x86_64 0:3.28.4-1.0.el7_3 will be an update
+---> Package python-javapackages.noarch 0:3.4.1-11.el7 will be installed
+--> Processing Dependency: python-lxml for package: python-javapackages-3.4.1-11.el7.noarch
+--> Running transaction check
+---> Package python-lxml.x86_64 0:3.2.1-4.el7 will be installed
+--> Finished Dependency Resolution
+Dependencies Resolved
+================================================================================
+ Package                      Arch    Version                    Repository
+                                                                           Size
+================================================================================
+Installing:
+ bc                           x86_64  1.06.95-13.el7             base     115 k
+ java-1.8.0-openjdk-headless  x86_64  1:1.8.0.131-3.b12.el7_3    updates   31 M
+ lsof                         x86_64  4.87-4.el7                 base     331 k
+ unzip                        x86_64  6.0-16.el7                 base     169 k
+ which                        x86_64  2.20-7.el7                 base      41 k
+Updating:
+ tar                          x86_64  2:1.26-31.el7              base     843 k
+Installing for dependencies:
+ copy-jdk-configs             noarch  1.2-1.el7                  base      14 k
+ freetype                     x86_64  2.4.11-12.el7              base     391 k
+ javapackages-tools           noarch  3.4.1-11.el7               base      73 k
+ libjpeg-turbo                x86_64  1.2.90-5.el7               base     134 k
+ libxslt                      x86_64  1.1.28-5.el7               base     242 k
+ lksctp-tools                 x86_64  1.0.17-2.el7               base      88 k
+ python-javapackages          noarch  3.4.1-11.el7               base      31 k
+ python-lxml                  x86_64  3.2.1-4.el7                base     758 k
+ tzdata-java                  noarch  2017b-1.el7                updates  183 k
+Updating for dependencies:
+ chkconfig                    x86_64  1.7.2-1.el7_3.1            updates  175 k
+ nspr                         x86_64  4.13.1-1.0.el7_3           updates  126 k
+ nss                          x86_64  3.28.4-1.2.el7_3           updates  872 k
+ nss-sysinit                  x86_64  3.28.4-1.2.el7_3           updates   58 k
+ nss-tools                    x86_64  3.28.4-1.2.el7_3           updates  496 k
+ nss-util                     x86_64  3.28.4-1.0.el7_3           updates   73 k
+
+Transaction Summary
+================================================================================
+Install  5 Packages (+9 Dependent packages)
+Upgrade  1 Package  (+6 Dependent packages)
+Total download size: 36 M
+Downloading packages:
+Delta RPMs disabled because /usr/bin/applydeltarpm not installed.
+[91mwarning: /var/cache/yum/x86_64/7/base/packages/copy-jdk-configs-1.2-1.el7.noarch.rpm: Header V3 RSA/SHA256 Signature, key ID f4a80eb5: NOKEY
+
+Public key for copy-jdk-configs-1.2-1.el7.noarch.rpm is not installed
+Public key for chkconfig-1.7.2-1.el7_3.1.x86_64.rpm is not installed
+--------------------------------------------------------------------------------
+Total                                              1.1 MB/s |  36 MB  00:32
+Retrieving key from file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+[91mImporting GPG key 0xF4A80EB5:
+ Userid     : "CentOS-7 Key (CentOS 7 Official Signing Key) <security@centos.org>"
+ Fingerprint: 6341 ab27 53d7 8a78 a7c2 7bb1 24c6 a8a7 f4a8 0eb5
+ Package    : centos-release-7-2.1511.el7.centos.2.10.x86_64 (@CentOS)
+ From       : /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+Updating   : nspr-4.13.1-1.0.el7_3.x86_64                                1/28
+Updating   : nss-util-3.28.4-1.0.el7_3.x86_64                            2/28
+Installing : libxslt-1.1.28-5.el7.x86_64                                 3/28
+Updating   : chkconfig-1.7.2-1.el7_3.1.x86_64                            4/28
+Updating   : nss-sysinit-3.28.4-1.2.el7_3.x86_64                         5/28
+Updating   : nss-3.28.4-1.2.el7_3.x86_64                                 6/28
+Installing : python-lxml-3.2.1-4.el7.x86_64                              7/28
+Installing : python-javapackages-3.4.1-11.el7.noarch                     8/28
+Installing : javapackages-tools-3.4.1-11.el7.noarch                      9/28
+Installing : freetype-2.4.11-12.el7.x86_64                              10/28
+Installing : tzdata-java-2017b-1.el7.noarch                             11/28
+Installing : copy-jdk-configs-1.2-1.el7.noarch                          12/28
+Installing : lksctp-tools-1.0.17-2.el7.x86_64                           13/28
+Installing : libjpeg-turbo-1.2.90-5.el7.x86_64                          14/28
+Installing : 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_   15/28
+Updating   : nss-tools-3.28.4-1.2.el7_3.x86_64                          16/28
+Installing : lsof-4.87-4.el7.x86_64                                     17/28
+Updating   : 2:tar-1.26-31.el7.x86_64                                   18/28
+Installing : which-2.20-7.el7.x86_64                                    19/28
+install-info: No such file or directory for /usr/share/info/which.info.gz
+Installing : bc-1.06.95-13.el7.x86_64                                   20/28
+Installing : unzip-6.0-16.el7.x86_64                                    21/28
+Cleanup    : nss-tools-3.21.0-9.el7_2.x86_64                            22/28
+Cleanup    : nss-sysinit-3.21.0-9.el7_2.x86_64                          23/28
+Cleanup    : nss-3.21.0-9.el7_2.x86_64                                  24/28
+Cleanup    : nss-util-3.21.0-2.2.el7_2.x86_64                           25/28
+Cleanup    : nspr-4.11.0-1.el7_2.x86_64                                 26/28
+Cleanup    : chkconfig-1.3.61-5.el7_2.1.x86_64                          27/28
+Cleanup    : 2:tar-1.26-29.el7.x86_64                                   28/28
+Verifying  : python-javapackages-3.4.1-11.el7.noarch                     1/28
+Verifying  : nss-tools-3.28.4-1.2.el7_3.x86_64                           2/28
+Verifying  : libjpeg-turbo-1.2.90-5.el7.x86_64                           3/28
+Verifying  : nss-3.28.4-1.2.el7_3.x86_64                                 4/28
+Verifying  : python-lxml-3.2.1-4.el7.x86_64                              5/28
+Verifying  : unzip-6.0-16.el7.x86_64                                     6/28
+Verifying  : nss-util-3.28.4-1.0.el7_3.x86_64                            7/28
+Verifying  : bc-1.06.95-13.el7.x86_64                                    8/28
+Verifying  : 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_    9/28
+Verifying  : which-2.20-7.el7.x86_64                                    10/28
+Verifying  : chkconfig-1.7.2-1.el7_3.1.x86_64                           11/28
+Verifying  : 2:tar-1.26-31.el7.x86_64                                   12/28
+Verifying  : lksctp-tools-1.0.17-2.el7.x86_64                           13/28
+Verifying  : copy-jdk-configs-1.2-1.el7.noarch                          14/28
+Verifying  : nss-sysinit-3.28.4-1.2.el7_3.x86_64                        15/28
+Verifying  : libxslt-1.1.28-5.el7.x86_64                                16/28
+Verifying  : tzdata-java-2017b-1.el7.noarch                             17/28
+Verifying  : javapackages-tools-3.4.1-11.el7.noarch                     18/28
+Verifying  : freetype-2.4.11-12.el7.x86_64                              19/28
+Verifying  : lsof-4.87-4.el7.x86_64                                     20/28
+Verifying  : nspr-4.13.1-1.0.el7_3.x86_64                               21/28
+Verifying  : 2:tar-1.26-29.el7.x86_64                                   22/28
+Verifying  : nspr-4.11.0-1.el7_2.x86_64                                 23/28
+Verifying  : nss-3.21.0-9.el7_2.x86_64                                  24/28
+Verifying  : nss-tools-3.21.0-9.el7_2.x86_64                            25/28
+Verifying  : nss-sysinit-3.21.0-9.el7_2.x86_64                          26/28
+Verifying  : chkconfig-1.3.61-5.el7_2.1.x86_64                          27/28
+Verifying  : nss-util-3.21.0-2.2.el7_2.x86_64                           28/28
+Installed:
+  bc.x86_64 0:1.06.95-13.el7                                                    
+  java-1.8.0-openjdk-headless.x86_64 1:1.8.0.131-3.b12.el7_3                    
+  lsof.x86_64 0:4.87-4.el7                                                      
+  unzip.x86_64 0:6.0-16.el7                                                     
+  which.x86_64 0:2.20-7.el7                                                     
+
+Dependency Installed:
+  copy-jdk-configs.noarch 0:1.2-1.el7       freetype.x86_64 0:2.4.11-12.el7    
+  javapackages-tools.noarch 0:3.4.1-11.el7  libjpeg-turbo.x86_64 0:1.2.90-5.el7
+  libxslt.x86_64 0:1.1.28-5.el7             lksctp-tools.x86_64 0:1.0.17-2.el7 
+  python-javapackages.noarch 0:3.4.1-11.el7 python-lxml.x86_64 0:3.2.1-4.el7   
+  tzdata-java.noarch 0:2017b-1.el7         
+
+Updated:
+  tar.x86_64 2:1.26-31.el7                                                      
+
+Dependency Updated:
+  chkconfig.x86_64 0:1.7.2-1.el7_3.1    nspr.x86_64 0:4.13.1-1.0.el7_3         
+  nss.x86_64 0:3.28.4-1.2.el7_3         nss-sysinit.x86_64 0:3.28.4-1.2.el7_3  
+  nss-tools.x86_64 0:3.28.4-1.2.el7_3   nss-util.x86_64 0:3.28.4-1.0.el7_3
+Complete!
+[91m+ yum clean all -y
+
+Loaded plugins: fastestmirror, ovl
+Cleaning repos: base extras updates
+Cleaning up everything
+Cleaning up list of fastest mirrors
+[91m+ export 'JAVA_OPTIONS=-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=128m'
+
+[91m+ JAVA_OPTIONS='-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=128m'
+
+---> 1d062bd96257
+Removing intermediate container 8e578f69deee
+Step 7 : EXPOSE 9091
+---> Running in cfbb4a3936c3
+---> 2211c455308a
+Removing intermediate container cfbb4a3936c3
+Step 8 : CMD java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTIONS -jar /web.jar --server.port=$SERVER_PORT
+---> Running in e6b59e604e6e
+---> f4bca3b03e83
+Removing intermediate container e6b59e604e6e
+Successfully built f4bca3b03e83
+Created image with ID 'f4bca3b03e83'.
+
+BUILD SUCCESSFUL
+
+Total time: 1 mins 34.615 secs
+```
+
+With `gradle dockerPush`
+```
+vagrant@localhost sample-microservices-springboot]$ ./gradlew :web:dockerPush
+:web:copyTask UP-TO-DATE
+:web:dockerBuild
+Building image using context '/Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/web/build/libs'.
+Using Dockerfile '/Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/web/build/libs/Dockerfile'
+Using tag '172.17.4.50:5000/springboot-osev3-examples:web' for image.
+Step 1 : FROM docker.io/centos:centos7
+---> 34c4689f9727
+Step 2 : LABEL maintainer "tangfeixiong" mailto "tangfx128@gmail.com" project "https://github.com/tangfeixiong/osev3-examples/tree/cicd/spring-boot/sample-microservices-springboot" name "web"
+---> Using cache
+---> 83de36713f81
+Step 3 : ARG app_version=0.0.1
+---> Using cache
+---> c99de0c9229d
+Step 4 : ENV JAVA_HOME "/opt/java" JAVA_OPTIONS "-Xms128m -Xmx512m -XX:PermSize=128m -XX:MaxPermSize=256m" SERVER_PORT 8091
+---> Using cache
+---> 13abaa6e73a2
+Step 5 : COPY /web-${app_version}.jar /
+---> Using cache
+---> 130cb059d358
+Step 6 : RUN set -x     && install_pkgs="         tar         unzip         bc         which         lsof         java-1.8.0-openjdk-headless     "     && if [[ -z $localrepo_url ]]; then         yum install -y $install_pkgs;     else         curl -jkSL $localrepo_url -o /etc/yum.repos.d/local.repo;         yum install -y --disablerepo=\* --enablerepo=localbase,localrepo-\* $install_pkgs;     fi     && yum clean all -y     && export JAVA_OPTIONS="-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=128m"
+---> Using cache
+---> 1d062bd96257
+Step 7 : EXPOSE 9091
+---> Using cache
+---> 2211c455308a
+Step 8 : CMD java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTIONS -jar /web.jar --server.port=$SERVER_PORT
+---> Using cache
+---> f4bca3b03e83
+Successfully built f4bca3b03e83
+Created image with ID 'f4bca3b03e83'.
+:web:dockerPush
+Pushing image with name '172.17.4.50:5000/springboot-osev3-examples'.
+
+BUILD SUCCESSFUL
+
+Total time: 27.046 secs
+```
+
+With `gradle dockerBuild`
+```
+[vagrant@localhost sample-microservices-springboot]$ ./gradlew :repositories-mem:dockerBuild
+:repositories-mem:copyTask
+:repositories-mem:dockerBuild
+Building image using context '/Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/repositories-mem/build/libs'.
+Using Dockerfile '/Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/repositories-mem/build/libs/Dockerfile'
+Using tag '172.17.4.50:5000/springboot-osev3-examples:repositories-mem' for image.
+Step 1 : FROM docker.io/centos:centos7
+---> 34c4689f9727
+Step 2 : LABEL maintainer "tangfeixiong" mailto "tangfx128@gmail.com" project "https://github.com/tangfeixiong/osev3-examples/tree/cicd/spring-boot/sample-microservices-springboot" name "web"
+---> Using cache
+---> 83de36713f81
+Step 3 : ARG app_version=0.0.0
+---> Running in 99cdb1f96743
+---> a2646f3b8805
+Removing intermediate container 99cdb1f96743
+Step 4 : ENV JAVA_HOME "/opt/java" JAVA_OPTIONS "-Xms128m -Xmx512m -XX:PermSize=128m -XX:MaxPermSize=256m" SERVER_PORT 9091
+---> Running in a965d7318f07
+---> f11dcdaec999
+Removing intermediate container a965d7318f07
+Step 5 : COPY /repositories-mem-${app_version}.jar /repositories-mem.jar
+---> 53cc6aff397a
+Removing intermediate container 4552a71392b7
+Step 6 : RUN set -x     && install_pkgs="         tar         unzip         bc         which         lsof         java-1.8.0-openjdk-headless     "     && if [[ -z $localrepo_url ]]; then         yum install -y $install_pkgs;     else         curl -jkSL $localrepo_url -o /etc/yum.repos.d/local.repo;         yum install -y --disablerepo=\* --enablerepo=localbase,localrepo-\* $install_pkgs;     fi     && yum clean all -y     && export JAVA_OPTIONS="-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=128m"
+---> Running in 5416c0e38fc7
+[91m+ install_pkgs='         tar         unzip         bc         which         lsof         java-1.8.0-openjdk-headless     '
++ [[ -z '' ]]
++ yum install -y tar unzip bc which lsof java-1.8.0-openjdk-headless
+
+Loaded plugins: fastestmirror, ovl
+Determining fastest mirrors
+* base: www.ftp.ne.jp
+* extras: centosv4.centos.org
+* updates: www.ftp.ne.jp
+Resolving Dependencies
+--> Running transaction check
+---> Package bc.x86_64 0:1.06.95-13.el7 will be installed
+---> Package java-1.8.0-openjdk-headless.x86_64 1:1.8.0.131-3.b12.el7_3 will be installed
+--> Processing Dependency: tzdata-java >= 2015d for package: 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_64
+--> Processing Dependency: nss(x86-64) >= 3.28.4 for package: 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_64
+--> Processing Dependency: copy-jdk-configs >= 1.1-3 for package: 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_64
+--> Processing Dependency: chkconfig >= 1.7 for package: 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_64
+--> Processing Dependency: chkconfig >= 1.7 for package: 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_64
+--> Processing Dependency: lksctp-tools(x86-64) for package: 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_64
+--> Processing Dependency: libjpeg.so.62(LIBJPEG_6.2)(64bit) for package: 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_64
+--> Processing Dependency: jpackage-utils for package: 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_64
+--> Processing Dependency: libjpeg.so.62()(64bit) for package: 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_64
+--> Processing Dependency: libfreetype.so.6()(64bit) for package: 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_64
+---> Package lsof.x86_64 0:4.87-4.el7 will be installed
+---> Package tar.x86_64 2:1.26-29.el7 will be updated
+---> Package tar.x86_64 2:1.26-31.el7 will be an update
+---> Package unzip.x86_64 0:6.0-16.el7 will be installed
+---> Package which.x86_64 0:2.20-7.el7 will be installed
+--> Running transaction check
+---> Package chkconfig.x86_64 0:1.3.61-5.el7_2.1 will be updated
+---> Package chkconfig.x86_64 0:1.7.2-1.el7_3.1 will be an update
+---> Package copy-jdk-configs.noarch 0:1.2-1.el7 will be installed
+---> Package freetype.x86_64 0:2.4.11-12.el7 will be installed
+---> Package javapackages-tools.noarch 0:3.4.1-11.el7 will be installed
+--> Processing Dependency: python-javapackages = 3.4.1-11.el7 for package: javapackages-tools-3.4.1-11.el7.noarch
+--> Processing Dependency: libxslt for package: javapackages-tools-3.4.1-11.el7.noarch
+---> Package libjpeg-turbo.x86_64 0:1.2.90-5.el7 will be installed
+---> Package lksctp-tools.x86_64 0:1.0.17-2.el7 will be installed
+---> Package nss.x86_64 0:3.21.0-9.el7_2 will be updated
+--> Processing Dependency: nss = 3.21.0-9.el7_2 for package: nss-sysinit-3.21.0-9.el7_2.x86_64
+--> Processing Dependency: nss(x86-64) = 3.21.0-9.el7_2 for package: nss-tools-3.21.0-9.el7_2.x86_64
+---> Package nss.x86_64 0:3.28.4-1.2.el7_3 will be an update
+--> Processing Dependency: nss-util >= 3.28.2-1.1 for package: nss-3.28.4-1.2.el7_3.x86_64
+--> Processing Dependency: nspr >= 4.13.1 for package: nss-3.28.4-1.2.el7_3.x86_64
+--> Processing Dependency: libnssutil3.so(NSSUTIL_3.24)(64bit) for package: nss-3.28.4-1.2.el7_3.x86_64
+---> Package tzdata-java.noarch 0:2017b-1.el7 will be installed
+--> Running transaction check
+---> Package libxslt.x86_64 0:1.1.28-5.el7 will be installed
+---> Package nspr.x86_64 0:4.11.0-1.el7_2 will be updated
+---> Package nspr.x86_64 0:4.13.1-1.0.el7_3 will be an update
+---> Package nss-sysinit.x86_64 0:3.21.0-9.el7_2 will be updated
+---> Package nss-sysinit.x86_64 0:3.28.4-1.2.el7_3 will be an update
+---> Package nss-tools.x86_64 0:3.21.0-9.el7_2 will be updated
+---> Package nss-tools.x86_64 0:3.28.4-1.2.el7_3 will be an update
+---> Package nss-util.x86_64 0:3.21.0-2.2.el7_2 will be updated
+---> Package nss-util.x86_64 0:3.28.4-1.0.el7_3 will be an update
+---> Package python-javapackages.noarch 0:3.4.1-11.el7 will be installed
+--> Processing Dependency: python-lxml for package: python-javapackages-3.4.1-11.el7.noarch
+--> Running transaction check
+---> Package python-lxml.x86_64 0:3.2.1-4.el7 will be installed
+--> Finished Dependency Resolution
+Dependencies Resolved
+================================================================================
+ Package                      Arch    Version                    Repository
+                                                                           Size
+================================================================================
+Installing:
+ bc                           x86_64  1.06.95-13.el7             base     115 k
+ java-1.8.0-openjdk-headless  x86_64  1:1.8.0.131-3.b12.el7_3    updates   31 M
+ lsof                         x86_64  4.87-4.el7                 base     331 k
+ unzip                        x86_64  6.0-16.el7                 base     169 k
+ which                        x86_64  2.20-7.el7                 base      41 k
+Updating:
+ tar                          x86_64  2:1.26-31.el7              base     843 k
+Installing for dependencies:
+ copy-jdk-configs             noarch  1.2-1.el7                  base      14 k
+ freetype                     x86_64  2.4.11-12.el7              base     391 k
+ javapackages-tools           noarch  3.4.1-11.el7               base      73 k
+ libjpeg-turbo                x86_64  1.2.90-5.el7               base     134 k
+ libxslt                      x86_64  1.1.28-5.el7               base     242 k
+ lksctp-tools                 x86_64  1.0.17-2.el7               base      88 k
+ python-javapackages          noarch  3.4.1-11.el7               base      31 k
+ python-lxml                  x86_64  3.2.1-4.el7                base     758 k
+ tzdata-java                  noarch  2017b-1.el7                updates  183 k
+Updating for dependencies:
+ chkconfig                    x86_64  1.7.2-1.el7_3.1            updates  175 k
+ nspr                         x86_64  4.13.1-1.0.el7_3           updates  126 k
+ nss                          x86_64  3.28.4-1.2.el7_3           updates  872 k
+ nss-sysinit                  x86_64  3.28.4-1.2.el7_3           updates   58 k
+ nss-tools                    x86_64  3.28.4-1.2.el7_3           updates  496 k
+ nss-util                     x86_64  3.28.4-1.0.el7_3           updates   73 k
+
+Transaction Summary
+================================================================================
+Install  5 Packages (+9 Dependent packages)
+Upgrade  1 Package  (+6 Dependent packages)
+Total download size: 36 M
+Downloading packages:
+Delta RPMs disabled because /usr/bin/applydeltarpm not installed.
+[91mwarning: /var/cache/yum/x86_64/7/base/packages/copy-jdk-configs-1.2-1.el7.noarch.rpm: Header V3 RSA/SHA256 Signature, key ID f4a80eb5: NOKEY
+
+Public key for copy-jdk-configs-1.2-1.el7.noarch.rpm is not installed
+Public key for chkconfig-1.7.2-1.el7_3.1.x86_64.rpm is not installed
+--------------------------------------------------------------------------------
+Total                                              1.1 MB/s |  36 MB  00:31
+Retrieving key from file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+[91mImporting GPG key 0xF4A80EB5:
+ Userid     : "CentOS-7 Key (CentOS 7 Official Signing Key) <security@centos.org>"
+ Fingerprint: 6341 ab27 53d7 8a78 a7c2 7bb1 24c6 a8a7 f4a8 0eb5
+ Package    : centos-release-7-2.1511.el7.centos.2.10.x86_64 (@CentOS)
+ From       : /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+Updating   : nspr-4.13.1-1.0.el7_3.x86_64                                1/28
+Updating   : nss-util-3.28.4-1.0.el7_3.x86_64                            2/28
+Installing : libxslt-1.1.28-5.el7.x86_64                                 3/28
+Updating   : chkconfig-1.7.2-1.el7_3.1.x86_64                            4/28
+Updating   : nss-sysinit-3.28.4-1.2.el7_3.x86_64                         5/28
+Updating   : nss-3.28.4-1.2.el7_3.x86_64                                 6/28
+Installing : python-lxml-3.2.1-4.el7.x86_64                              7/28
+Installing : python-javapackages-3.4.1-11.el7.noarch                     8/28
+Installing : javapackages-tools-3.4.1-11.el7.noarch                      9/28
+Installing : freetype-2.4.11-12.el7.x86_64                              10/28
+Installing : tzdata-java-2017b-1.el7.noarch                             11/28
+Installing : copy-jdk-configs-1.2-1.el7.noarch                          12/28
+Installing : lksctp-tools-1.0.17-2.el7.x86_64                           13/28
+Installing : libjpeg-turbo-1.2.90-5.el7.x86_64                          14/28
+Installing : 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_   15/28
+Updating   : nss-tools-3.28.4-1.2.el7_3.x86_64                          16/28
+Installing : lsof-4.87-4.el7.x86_64                                     17/28
+Updating   : 2:tar-1.26-31.el7.x86_64                                   18/28
+Installing : which-2.20-7.el7.x86_64                                    19/28
+install-info: No such file or directory for /usr/share/info/which.info.gz
+Installing : bc-1.06.95-13.el7.x86_64                                   20/28
+Installing : unzip-6.0-16.el7.x86_64                                    21/28
+Cleanup    : nss-tools-3.21.0-9.el7_2.x86_64                            22/28
+Cleanup    : nss-sysinit-3.21.0-9.el7_2.x86_64                          23/28
+Cleanup    : nss-3.21.0-9.el7_2.x86_64                                  24/28
+Cleanup    : nss-util-3.21.0-2.2.el7_2.x86_64                           25/28
+Cleanup    : nspr-4.11.0-1.el7_2.x86_64                                 26/28
+Cleanup    : chkconfig-1.3.61-5.el7_2.1.x86_64                          27/28
+Cleanup    : 2:tar-1.26-29.el7.x86_64                                   28/28
+Verifying  : python-javapackages-3.4.1-11.el7.noarch                     1/28
+Verifying  : nss-tools-3.28.4-1.2.el7_3.x86_64                           2/28
+Verifying  : libjpeg-turbo-1.2.90-5.el7.x86_64                           3/28
+Verifying  : nss-3.28.4-1.2.el7_3.x86_64                                 4/28
+Verifying  : python-lxml-3.2.1-4.el7.x86_64                              5/28
+Verifying  : unzip-6.0-16.el7.x86_64                                     6/28
+Verifying  : nss-util-3.28.4-1.0.el7_3.x86_64                            7/28
+Verifying  : bc-1.06.95-13.el7.x86_64                                    8/28
+Verifying  : 1:java-1.8.0-openjdk-headless-1.8.0.131-3.b12.el7_3.x86_    9/28
+Verifying  : which-2.20-7.el7.x86_64                                    10/28
+Verifying  : chkconfig-1.7.2-1.el7_3.1.x86_64                           11/28
+Verifying  : 2:tar-1.26-31.el7.x86_64                                   12/28
+Verifying  : lksctp-tools-1.0.17-2.el7.x86_64                           13/28
+Verifying  : copy-jdk-configs-1.2-1.el7.noarch                          14/28
+Verifying  : nss-sysinit-3.28.4-1.2.el7_3.x86_64                        15/28
+Verifying  : libxslt-1.1.28-5.el7.x86_64                                16/28
+Verifying  : tzdata-java-2017b-1.el7.noarch                             17/28
+Verifying  : javapackages-tools-3.4.1-11.el7.noarch                     18/28
+Verifying  : freetype-2.4.11-12.el7.x86_64                              19/28
+Verifying  : lsof-4.87-4.el7.x86_64                                     20/28
+Verifying  : nspr-4.13.1-1.0.el7_3.x86_64                               21/28
+Verifying  : 2:tar-1.26-29.el7.x86_64                                   22/28
+Verifying  : nspr-4.11.0-1.el7_2.x86_64                                 23/28
+Verifying  : nss-3.21.0-9.el7_2.x86_64                                  24/28 
+  Verifying  : nss-tools-3.21.0-9.el7_2.x86_64                            25/28 
+  Verifying  : nss-sysinit-3.21.0-9.el7_2.x86_64                          26/28
+Verifying  : chkconfig-1.3.61-5.el7_2.1.x86_64                          27/28 
+  Verifying  : nss-util-3.21.0-2.2.el7_2.x86_64                           28/28
+Installed:
+  bc.x86_64 0:1.06.95-13.el7                                                    
+  java-1.8.0-openjdk-headless.x86_64 1:1.8.0.131-3.b12.el7_3                    
+  lsof.x86_64 0:4.87-4.el7                                                      
+  unzip.x86_64 0:6.0-16.el7                                                     
+  which.x86_64 0:2.20-7.el7                                                     
+
+Dependency Installed:
+  copy-jdk-configs.noarch 0:1.2-1.el7       freetype.x86_64 0:2.4.11-12.el7    
+  javapackages-tools.noarch 0:3.4.1-11.el7  libjpeg-turbo.x86_64 0:1.2.90-5.el7
+  libxslt.x86_64 0:1.1.28-5.el7             lksctp-tools.x86_64 0:1.0.17-2.el7 
+  python-javapackages.noarch 0:3.4.1-11.el7 python-lxml.x86_64 0:3.2.1-4.el7   
+  tzdata-java.noarch 0:2017b-1.el7         
+
+Updated:
+  tar.x86_64 2:1.26-31.el7                                                      
+
+Dependency Updated:
+  chkconfig.x86_64 0:1.7.2-1.el7_3.1    nspr.x86_64 0:4.13.1-1.0.el7_3         
+  nss.x86_64 0:3.28.4-1.2.el7_3         nss-sysinit.x86_64 0:3.28.4-1.2.el7_3  
+  nss-tools.x86_64 0:3.28.4-1.2.el7_3   nss-util.x86_64 0:3.28.4-1.0.el7_3
+Complete!
+[91m+ yum clean all -y
+
+Loaded plugins: fastestmirror, ovl
+Cleaning repos: base extras updates
+Cleaning up everything
+Cleaning up list of fastest mirrors
+[91m+ export 'JAVA_OPTIONS=-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=128m'
++ JAVA_OPTIONS='-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=128m'
+
+---> 76d3cb0be6ce
+Removing intermediate container 5416c0e38fc7
+Step 7 : EXPOSE 9091
+---> Running in 7da74b1f81c3
+---> c1183c296afe
+Removing intermediate container 7da74b1f81c3
+Step 8 : CMD java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTIONS -jar /repositories-mem.jar --server.port=$SERVER_PORT
+---> Running in bbdcb7f2eec8
+---> e6468a0a2ba6
+Removing intermediate container bbdcb7f2eec8
+Successfully built e6468a0a2ba6
+Created image with ID 'e6468a0a2ba6'.
+
+BUILD SUCCESSFUL
+```
+
+With `gradle dockerPush`
+```
+[vagrant@localhost sample-microservices-springboot]$ ./gradlew :repositories-mem:dockerPush
+:repositories-mem:copyTask UP-TO-DATE
+:repositories-mem:dockerBuild
+Building image using context '/Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/repositories-mem/build/libs'.
+Using Dockerfile '/Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/repositories-mem/build/libs/Dockerfile'
+Using tag '172.17.4.50:5000/springboot-osev3-examples:repositories-mem' for image.
+Step 1 : FROM docker.io/centos:centos7
+---> 34c4689f9727
+Step 2 : LABEL maintainer "tangfeixiong" mailto "tangfx128@gmail.com" project "https://github.com/tangfeixiong/osev3-examples/tree/cicd/spring-boot/sample-microservices-springboot" name "web"
+---> Using cache
+---> 83de36713f81
+Step 3 : ARG app_version=0.0.0
+---> Using cache
+---> a2646f3b8805
+Step 4 : ENV JAVA_HOME "/opt/java" JAVA_OPTIONS "-Xms128m -Xmx512m -XX:PermSize=128m -XX:MaxPermSize=256m" SERVER_PORT 9091
+---> Using cache
+---> f11dcdaec999
+Step 5 : COPY /repositories-mem-${app_version}.jar /repositories-mem.jar
+---> Using cache
+---> 53cc6aff397a
+Step 6 : RUN set -x     && install_pkgs="         tar         unzip         bc         which         lsof         java-1.8.0-openjdk-headless     "     && if [[ -z $localrepo_url ]]; then         yum install -y $install_pkgs;     else         curl -jkSL $localrepo_url -o /etc/yum.repos.d/local.repo;         yum install -y --disablerepo=\* --enablerepo=localbase,localrepo-\* $install_pkgs;     fi     && yum clean all -y     && export JAVA_OPTIONS="-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=128m"
+---> Using cache
+---> 76d3cb0be6ce
+Step 7 : EXPOSE 9091
+---> Using cache
+---> c1183c296afe
+Step 8 : CMD java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTIONS -jar /repositories-mem.jar --server.port=$SERVER_PORT
+---> Using cache
+---> e6468a0a2ba6
+Successfully built e6468a0a2ba6
+Created image with ID 'e6468a0a2ba6'.
+:repositories-mem:dockerPush
+Pushing image with name '172.17.4.50:5000/springboot-osev3-examples'.
+
+BUILD SUCCESSFUL
+
+Total time: 28.319 secs
+```
