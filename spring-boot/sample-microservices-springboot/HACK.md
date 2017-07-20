@@ -1,5 +1,15 @@
 # Intruduction
 
+## Table of Contents
+
+Maven, Gradle and Wrappers
+
+Build with Java project tools
+
+Jenkins CI 
+
+Docker Compose CD
+
 ### Maven, Gradle and Wrappers
 
 For `mvn`
@@ -1558,4 +1568,188 @@ Pushing image with name '172.17.4.50:5000/springboot-osev3-examples'.
 BUILD SUCCESSFUL
 
 Total time: 28.319 secs
+```
+
+Docker-Compose
+```
+[vagrant@localhost sample-microservices-springboot]$ docker-compose up
+Creating network "samplemicroservicesspringboot_default" with the default driver
+Creating samplemicroservicesspringboot_repositories-mem_1 ... 
+Creating samplemicroservicesspringboot_web_1 ... 
+Creating samplemicroservicesspringboot_web_1
+Creating samplemicroservicesspringboot_web_1 ... done
+Attaching to samplemicroservicesspringboot_repositories-mem_1, samplemicroservicesspringboot_web_1
+repositories-mem_1  | OpenJDK 64-Bit Server VM warning: ignoring option PermSize=128m; support was removed in 8.0
+repositories-mem_1  | OpenJDK 64-Bit Server VM warning: ignoring option MaxPermSize=256m; support was removed in 8.0
+web_1               | OpenJDK 64-Bit Server VM warning: ignoring option PermSize=128m; support was removed in 8.0
+web_1               | OpenJDK 64-Bit Server VM warning: ignoring option MaxPermSize=256m; support was removed in 8.0
+repositories-mem_1  | no main manifest attribute, in /repositories-mem.jar
+samplemicroservicesspringboot_repositories-mem_1 exited with code 0
+repositories-mem_1  | OpenJDK 64-Bit Server VM warning: ignoring option PermSize=128m; support was removed in 8.0
+repositories-mem_1  | OpenJDK 64-Bit Server VM warning: ignoring option MaxPermSize=256m; support was removed in 8.0
+repositories-mem_1  | no main manifest attribute, in /repositories-mem.jar
+repositories-mem_1  | OpenJDK 64-Bit Server VM warning: ignoring option PermSize=128m; support was removed in 8.0
+repositories-mem_1  | OpenJDK 64-Bit Server VM warning: ignoring option MaxPermSize=256m; support was removed in 8.0
+repositories-mem_1  | no main manifest attribute, in /repositories-mem.jar
+repositories-mem_1  | OpenJDK 64-Bit Server VM warning: ignoring option PermSize=128m; support was removed in 8.0
+repositories-mem_1  | OpenJDK 64-Bit Server VM warning: ignoring option MaxPermSize=256m; support was removed in 8.0
+repositories-mem_1  | no main manifest attribute, in /repositories-mem.jar
+web_1               | 
+web_1               |   .   ____          _            __ _ _
+web_1               |  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+web_1               | ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+web_1               |  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+web_1               |   '  |____| .__|_| |_|_| |_\__, | / / / /
+web_1               |  =========|_|==============|___/=/_/_/_/
+web_1               |  :: Spring Boot ::        (v1.5.4.RELEASE)
+web_1               | 
+samplemicroservicesspringboot_repositories-mem_1 exited with code 0
+web_1               | 2017-07-20 05:45:30.316  INFO 1 --- [           main] c.o.e.m.web.SampleWebUIApplication       : Starting SampleWebUIApplication on 95383971156e with PID 1 (/web.jar started by root in /)
+web_1               | 2017-07-20 05:45:30.342  INFO 1 --- [           main] c.o.e.m.web.SampleWebUIApplication       : No active profile set, falling back to default profiles: default
+web_1               | 2017-07-20 05:45:31.054  INFO 1 --- [           main] ationConfigEmbeddedWebApplicationContext : Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@4bf558aa: startup date [Thu Jul 20 05:45:31 UTC 2017]; root of context hierarchy
+repositories-mem_1  | OpenJDK 64-Bit Server VM warning: ignoring option PermSize=128m; support was removed in 8.0
+repositories-mem_1  | OpenJDK 64-Bit Server VM warning: ignoring option MaxPermSize=256m; support was removed in 8.0
+repositories-mem_1  | no main manifest attribute, in /repositories-mem.jar
+repositories-mem_1  | OpenJDK 64-Bit Server VM warning: ignoring option PermSize=128m; support was removed in 8.0
+repositories-mem_1  | OpenJDK 64-Bit Server VM warning: ignoring option MaxPermSize=256m; support was removed in 8.0
+repositories-mem_1  | no main manifest attribute, in /repositories-mem.jar
+repositories-mem_1  | OpenJDK 64-Bit Server VM warning: ignoring option PermSize=128m; support was removed in 8.0
+repositories-mem_1  | OpenJDK 64-Bit Server VM warning: ignoring option MaxPermSize=256m; support was removed in 8.0
+repositories-mem_1  | no main manifest attribute, in /repositories-mem.jar
+repositories-mem_1  | OpenJDK 64-Bit Server VM warning: ignoring option PermSize=128m; support was removed in 8.0
+repositories-mem_1  | OpenJDK 64-Bit Server VM warning: ignoring option MaxPermSize=256m; support was removed in 8.0
+repositories-mem_1  | no main manifest attribute, in /repositories-mem.jar
+repositories-mem_1  | OpenJDK 64-Bit Server VM warning: ignoring option PermSize=128m; support was removed in 8.0
+repositories-mem_1  | OpenJDK 64-Bit Server VM warning: ignoring option MaxPermSize=256m; support was removed in 8.0
+repositories-mem_1  | no main manifest attribute, in /repositories-mem.jar
+web_1               | 2017-07-20 05:45:34.912  INFO 1 --- [           main] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat initialized with port(s): 8091 (http)
+web_1               | 2017-07-20 05:45:34.941  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+web_1               | 2017-07-20 05:45:34.945  INFO 1 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/8.5.15
+web_1               | 2017-07-20 05:45:35.141  INFO 1 --- [ost-startStop-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+web_1               | 2017-07-20 05:45:35.142  INFO 1 --- [ost-startStop-1] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 4102 ms
+web_1               | 2017-07-20 05:45:35.499 ERROR 1 --- [ost-startStop-1] o.s.b.c.embedded.tomcat.TomcatStarter    : Error starting Tomcat context. Exception: org.springframework.beans.factory.BeanCreationException. Message: Error creating bean with name 'characterEncodingFilter' defined in class path resource [org/springframework/boot/autoconfigure/web/HttpEncodingAutoConfiguration.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.springframework.web.filter.CharacterEncodingFilter]: Factory method 'characterEncodingFilter' threw exception; nested exception is java.lang.NoSuchMethodError: org.springframework.web.filter.CharacterEncodingFilter.setForceRequestEncoding(Z)V
+web_1               | 2017-07-20 05:45:35.564  WARN 1 --- [           main] ationConfigEmbeddedWebApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Unable to start embedded container; nested exception is org.springframework.boot.context.embedded.EmbeddedServletContainerException: Unable to start embedded Tomcat
+web_1               | 2017-07-20 05:45:35.591  INFO 1 --- [           main] utoConfigurationReportLoggingInitializer : 
+web_1               | 
+web_1               | Error starting ApplicationContext. To display the auto-configuration report re-run your application with 'debug' enabled.
+web_1               | 2017-07-20 05:45:35.604 ERROR 1 --- [           main] o.s.boot.SpringApplication               : Application startup failed
+web_1               | 
+web_1               | org.springframework.context.ApplicationContextException: Unable to start embedded container; nested exception is org.springframework.boot.context.embedded.EmbeddedServletContainerException: Unable to start embedded Tomcat
+web_1               | 	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.onRefresh(EmbeddedWebApplicationContext.java:137)
+web_1               | 	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:537)
+web_1               | 	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.refresh(EmbeddedWebApplicationContext.java:122)
+web_1               | 	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:693)
+web_1               | 	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:360)
+web_1               | 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303)
+web_1               | 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1118)
+web_1               | 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1107)
+web_1               | 	at com.openshift.evangelists.microservices.web.SampleWebUIApplication.main(SampleWebUIApplication.java:36)
+web_1               | 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+web_1               | 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+web_1               | 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+web_1               | 	at java.lang.reflect.Method.invoke(Method.java:498)
+web_1               | 	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:48)
+web_1               | 	at org.springframework.boot.loader.Launcher.launch(Launcher.java:87)
+web_1               | 	at org.springframework.boot.loader.Launcher.launch(Launcher.java:50)
+web_1               | 	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:51)
+web_1               | Caused by: org.springframework.boot.context.embedded.EmbeddedServletContainerException: Unable to start embedded Tomcat
+web_1               | 	at org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer.initialize(TomcatEmbeddedServletContainer.java:123)
+web_1               | 	at org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer.<init>(TomcatEmbeddedServletContainer.java:84)
+web_1               | 	at org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory.getTomcatEmbeddedServletContainer(TomcatEmbeddedServletContainerFactory.java:554)
+web_1               | 	at org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory.getEmbeddedServletContainer(TomcatEmbeddedServletContainerFactory.java:179)
+web_1               | 	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.createEmbeddedServletContainer(EmbeddedWebApplicationContext.java:164)
+web_1               | 	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.onRefresh(EmbeddedWebApplicationContext.java:134)
+web_1               | 	... 16 common frames omitted
+web_1               | Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'characterEncodingFilter' defined in class path resource [org/springframework/boot/autoconfigure/web/HttpEncodingAutoConfiguration.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.springframework.web.filter.CharacterEncodingFilter]: Factory method 'characterEncodingFilter' threw exception; nested exception is java.lang.NoSuchMethodError: org.springframework.web.filter.CharacterEncodingFilter.setForceRequestEncoding(Z)V
+web_1               | 	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:599)
+web_1               | 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1173)
+web_1               | 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1067)
+web_1               | 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:513)
+web_1               | 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+web_1               | 	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:306)
+web_1               | 	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+web_1               | 	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:302)
+web_1               | 	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+web_1               | 	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:234)
+web_1               | 	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:182)
+web_1               | 	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:177)
+web_1               | 	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAdaptableBeans(ServletContextInitializerBeans.java:159)
+web_1               | 	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:80)
+web_1               | 	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.getServletContextInitializerBeans(EmbeddedWebApplicationContext.java:241)
+web_1               | 	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.selfInitialize(EmbeddedWebApplicationContext.java:228)
+web_1               | 	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.access$000(EmbeddedWebApplicationContext.java:89)
+web_1               | 	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext$1.onStartup(EmbeddedWebApplicationContext.java:213)
+web_1               | 	at org.springframework.boot.context.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:55)
+web_1               | 	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5196)
+web_1               | 	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+web_1               | 	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1419)
+web_1               | 	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1409)
+web_1               | 	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+web_1               | 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+web_1               | 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+web_1               | 	at java.lang.Thread.run(Thread.java:748)
+web_1               | Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.springframework.web.filter.CharacterEncodingFilter]: Factory method 'characterEncodingFilter' threw exception; nested exception is java.lang.NoSuchMethodError: org.springframework.web.filter.CharacterEncodingFilter.setForceRequestEncoding(Z)V
+web_1               | 	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:189)
+web_1               | 	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:588)
+web_1               | 	... 26 common frames omitted
+web_1               | Caused by: java.lang.NoSuchMethodError: org.springframework.web.filter.CharacterEncodingFilter.setForceRequestEncoding(Z)V
+web_1               | 	at org.springframework.boot.autoconfigure.web.HttpEncodingAutoConfiguration.characterEncodingFilter(HttpEncodingAutoConfiguration.java:60)
+web_1               | 	at org.springframework.boot.autoconfigure.web.HttpEncodingAutoConfiguration$$EnhancerBySpringCGLIB$$a6337142.CGLIB$characterEncodingFilter$0(<generated>)
+web_1               | 	at org.springframework.boot.autoconfigure.web.HttpEncodingAutoConfiguration$$EnhancerBySpringCGLIB$$a6337142$$FastClassBySpringCGLIB$$f67d59e0.invoke(<generated>)
+web_1               | 	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:228)
+web_1               | 	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:358)
+web_1               | 	at org.springframework.boot.autoconfigure.web.HttpEncodingAutoConfiguration$$EnhancerBySpringCGLIB$$a6337142.characterEncodingFilter(<generated>)
+web_1               | 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+web_1               | 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+web_1               | 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+web_1               | 	at java.lang.reflect.Method.invoke(Method.java:498)
+web_1               | 	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:162)
+web_1               | 	... 27 common frames omitted
+web_1               | 
+samplemicroservicesspringboot_repositories-mem_1 exited with code 0
+samplemicroservicesspringboot_web_1 exited with code 0
+```
+
+Gradle
+```
+[vagrant@localhost eureka]$ gradle build
+Download https://jcenter.bintray.com/org/springframework/boot/spring-boot-gradle-plugin/1.4.3.RELEASE/spring-boot-gradle-plugin-1.4.3.RELEASE.pom
+Download https://jcenter.bintray.com/org/springframework/boot/spring-boot-gradle-plugin/1.4.3.RELEASE/spring-boot-gradle-plugin-1.4.3.RELEASE.jar
+Download https://jcenter.bintray.com/io/spring/gradle/dependency-management-plugin/0.6.1.RELEASE/dependency-management-plugin-0.6.1.RELEASE.jar
+The plugin id 'spring-boot' is deprecated. Please use 'org.springframework.boot' instead.
+Spring Boot plugin's support for Gradle 2.5 is deprecated. Please upgrade to Gradle 2.9 or later.
+:compileJava
+...snip...
+
+```
+
+Payload
+```
+[vagrant@localhost sample-microservices-springboot]$ docker-compose ps
+                      Name                                    Command                 State       Ports   
+---------------------------------------------------------------------------------------------------------
+samplemicroservicesspringboot_repositories-mem_1   /bin/sh -c java -Djava.sec ...   Restarting   9091/tcp 
+samplemicroservicesspringboot_web_1                /bin/sh -c java -Djava.sec ...   Restarting   9091/tcp 
+```
+
+Networking
+```
+[vagrant@localhost sample-microservices-springboot]$ docker network ls
+NETWORK ID          NAME                                    DRIVER
+d38da8bfe6e5        none                                    null                
+9f0c9b730340        host                                    host                
+c5f656cde491        samplemicroservicesspringboot_default   bridge              
+3ba1465afaf1        cbr0                                    bridge              
+203b62e09f95        bridge                                  bridge              
+cee016075c51        gitlab_default                          bridge              
+```
+
+Down
+```
+[vagrant@localhost sample-microservices-springboot]$ docker-compose down
+Stopping samplemicroservicesspringboot_repositories-mem_1 ... done
+Stopping samplemicroservicesspringboot_web_1 ... done
+Removing samplemicroservicesspringboot_repositories-mem_1 ... done
+Removing samplemicroservicesspringboot_web_1 ... done
+Removing network samplemicroservicesspringboot_default
 ```

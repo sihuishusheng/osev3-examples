@@ -1,0 +1,41 @@
+version: '2'
+
+services:
+  repositories-mem:
+    restart: always
+    image: 172.17.4.50:5000/springboot-osev3-examples:repositories-mem
+    # environment:
+    # - JAVA_OPTIONS=-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=128m
+    # - SERVER_PORT=9091
+    # command:
+    # - java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTIONS -jar /repositories-mem.jar --server.port=$SERVER_PORT
+    # volumes:
+    # - /path/from/your/host:/path/to/your/container
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile.oracle-server-jre1.8
+      # args:
+      #   name: value
+      labels:
+        project: "example"
+    image: 172.17.4.50:5000/springboot-osev3-examples:web
+    environment:
+    # - JAVA_OPTIONS=-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=128m
+    # - SERVER_PORT=8091
+    - REMOTEHOST=repositories-mem
+    - REMOTEPORT=9091
+    # command:
+    # - java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTIONS -jar /repositories-mem.jar --remoteHost=localhost --remotePort=9091 --server.port=$SERVER_PORT
+    ports:
+    - "8091:8091"
+    restart: always
+    # volumes:
+    # - /path/from/your/host:/path/to/your/container
+
+  eureka:
+    image: 172.17.4.50:5000/eureka
+    ports:
+    - "8761:8761"
+    restart: always

@@ -13,9 +13,9 @@ COPY /target/web.jar /
 ENV JAVA_HOME="/opt/java" \
     PATH=$PATH:/opt/java/bin \
     JAVA_OPTIONS="-Xms128m -Xmx512m -XX:PermSize=128m -XX:MaxPermSize=256m" \
+    SERVER_PORT="8091" \
     REMOTE_HOST="localhost" \
-    REMOTE_PORT=9091 \
-    SERVER_PORT=8091
+    REMOTE_PORT="9091"
 
 RUN set -x \
     && temp_dir=/tmp/build \

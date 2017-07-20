@@ -8,7 +8,9 @@ ARG app_version=0.0.1
 
 ENV JAVA_HOME="/opt/java" \
     JAVA_OPTIONS="-Xms128m -Xmx512m -XX:PermSize=128m -XX:MaxPermSize=256m" \
-    SERVER_PORT=8091
+    SERVER_PORT=8091 \
+    REMOTEHOST=localhost \
+    REMOTEPORT=9091
 
 COPY /web-${app_version}.jar /web.jar
 
@@ -33,6 +35,6 @@ RUN set -x \
 # This default user is created in the openshift/base-centos7 image
 # USER 1001
 
-EXPOSE 9091
+EXPOSE 8091
 
-CMD java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTIONS -jar /web.jar --server.port=$SERVER_PORT
+CMD java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTIONS -jar /web.jar --remoteHost=localhost --remotePort=9091 --server.port=$SERVER_PORT

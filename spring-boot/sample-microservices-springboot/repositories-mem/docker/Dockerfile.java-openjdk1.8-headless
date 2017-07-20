@@ -1,7 +1,7 @@
 # FROM openshift/base-centos7
 FROM docker.io/centos:centos7
 LABEL maintainer="tangfeixiong" mailto="tangfx128@gmail.com" \
-    project="https://github.com/tangfeixiong/osev3-examples/tree/cicd/spring-boot/sample-microservices-springboot" name="web"
+    project="https://github.com/tangfeixiong/osev3-examples/tree/cicd/spring-boot/sample-microservices-springboot" name="repositories-mem"
 
 # ARG localrepo_url=http://172.17.4.50:48080/99-mirror/http0x3A0x2F0x2Fmirror.centos.org0x2Fcentos/centos7-local.repo
 ARG app_version=0.0.1
