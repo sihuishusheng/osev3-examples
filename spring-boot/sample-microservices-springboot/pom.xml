@@ -15,7 +15,49 @@
         <module>repositories-mem</module>
     </modules>
 
+	<dependencyManagement>
+	     <dependencies>
+	        <!-- Override Spring Data release train provided by Spring Boot -->
+	        <dependency>
+	            <groupId>org.springframework.data</groupId>
+	            <artifactId>spring-data-releasetrain</artifactId>
+	            <version>Fowler-SR2</version>
+	            <scope>import</scope>
+	            <type>pom</type>
+	        </dependency>
+	        <dependency>
+	            <!-- Import dependency management from Spring Boot -->
+	            <groupId>org.springframework.boot</groupId>
+	            <artifactId>spring-boot-dependencies</artifactId>
+	            <version>1.5.4.RELEASE</version>
+	            <type>pom</type>
+	            <scope>import</scope>
+	        </dependency>
+	    </dependencies>
+	</dependencyManagement>
+
     <repositories>
+		<repository>
+			<id>repo.spring.io-milestones</id>
+			<name>repo.spring.io-milestones</name>
+			<url>https://repo.spring.io/libs-milestone-local</url>
+		</repository>
+		<repository>
+			<id>repo.spring.io-snapshots</id>
+			<name>repo.spring.io-snapshots</name>
+			<url>https://repo.spring.io/libs-snapshot-local</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+            <id>spring-releases</id>
+            <url>https://repo.spring.io/libs-release</url>
+        </repository>
+        <repository>
+            <id>my-mirror</id>
+            <url>http://172.17.4.50:8081/content/groups/public</url>
+		</repository>
         <repository>
             <id>my-synced</id>
             <url>http://172.17.4.50:8081/content/repositories/allsynced</url>
@@ -26,13 +68,32 @@
 			    <enabled>true</enabled>
 			</snapshots>
         </repository>
-        <repository>
-            <id>my-mirror</id>
-            <url>http://172.17.4.50:8081/content/groups/public</url>
-		</repository>
     </repositories>
 
     <pluginRepositories>
+        <pluginRepository>
+            <id>spring-libs-snapshots</id>
+            <url>https://repo.spring.io/libs-snapshot-local</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-libs-milestones</id>
+            <url>https://repo.spring.io/libs-milestone-local</url>
+        </pluginRepository>
+		<pluginRepository>
+			<id>spring-libs-release</id>
+			<url>https://repo.spring.io/libs-release-local</url>
+		</pluginRepository>
+		<pluginRepository>
+            <id>spring-releases</id>
+            <url>https://repo.spring.io/libs-release</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>my-mirror</id>
+            <url>http://172.17.4.50:8081/content/groups/public</url>
+		</pluginRepository>
         <pluginRepository>
             <id>my-synced</id>
             <url>http://172.17.4.50:8081/content/repositories/allsynced</url>
@@ -43,10 +104,6 @@
 			    <enabled>true</enabled>
 			</snapshots>
         </pluginRepository>
-        <pluginRepository>
-            <id>my-mirror</id>
-            <url>http://172.17.4.50:8081/content/groups/public</url>
-		</pluginRepository>
     </pluginRepositories>
 	
 	<distributionManagement>	
@@ -81,6 +138,18 @@
 	         <skip>true</skip>
 	       </configuration>
 		</plugin>	
+
+	    <plugin>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-maven-plugin</artifactId>
+	        <dependencies>
+	            <dependency>
+	                <groupId>org.springframework</groupId>
+	                <artifactId>springloaded</artifactId>
+	                <version>1.2.6.RELEASE</version>
+	            </dependency>
+	        </dependencies>
+	    </plugin>
 	
 	    <plugin>
 	      <groupId>org.sonatype.plugins</groupId>

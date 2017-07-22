@@ -519,6 +519,142 @@ fanhonglingdeMacBook-Pro:sample-microservices-springboot fanhongling$ mvn instal
 [INFO] ------------------------------------------------------------------------
 ```
 
+With spring-boot repackage & fabric8-docker build
+```
+[vagrant@localhost sample-microservices-springboot]$ mvn install spring-boot:repackage io.fabric8:docker-maven-plugin:build
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.openshift.evangelists:microservices-demo-springboot:pom:0.0.1-SNAPSHOT
+[WARNING] 'build.plugins.plugin.version' for org.springframework.boot:spring-boot-maven-plugin is missing. @ line 142, column 14
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] web
+[INFO] repositories-mem
+[INFO] microservices-demo
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building web 0.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ web ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO] Copying 11 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ web ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ web ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/web/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ web ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.18.1:test (default-test) @ web ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --- maven-jar-plugin:2.6:jar (default-jar) @ web ---
+[INFO] Building jar: /Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/web/target/web.jar
+[INFO] 
+[INFO] --- spring-boot-maven-plugin:1.5.4.RELEASE:repackage (default) @ web ---
+[INFO] 
+[INFO] --- maven-install-plugin:2.5.2:install (default-install) @ web ---
+[INFO] Installing /Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/web/target/web.jar to /home/vagrant/.m2/repository/com/openshift/evangelists/microservices-demo-springboot/web/0.0.1-SNAPSHOT/web-0.0.1-SNAPSHOT.jar
+[INFO] Installing /Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/web/pom.xml to /home/vagrant/.m2/repository/com/openshift/evangelists/microservices-demo-springboot/web/0.0.1-SNAPSHOT/web-0.0.1-SNAPSHOT.pom
+[INFO] 
+[INFO] --- docker-maven-plugin:0.21.0:build (docker-build) @ web ---
+[INFO] Copying files to /Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/web/target/docker/172.17.4.50/5000/springboot-osev3-examples/web/build/maven
+[INFO] Building tar: /Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/web/target/docker/172.17.4.50/5000/springboot-osev3-examples/web/tmp/docker-build.tar
+[INFO] DOCKER> [172.17.4.50:5000/springboot-osev3-examples:web]: Created docker-build.tar in 19 seconds 
+[INFO] DOCKER> [172.17.4.50:5000/springboot-osev3-examples:web]: Built image sha256:a3af4
+[INFO] DOCKER> [172.17.4.50:5000/springboot-osev3-examples:web]: Removed old image sha256:018e2
+[INFO] 
+[INFO] --- spring-boot-maven-plugin:1.5.4.RELEASE:repackage (default-cli) @ web ---
+[INFO] 
+[INFO] --- docker-maven-plugin:0.21.0:build (default-cli) @ web ---
+[INFO] Copying files to /Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/web/target/docker/172.17.4.50/5000/springboot-osev3-examples/web/build/maven
+[INFO] Building tar: /Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/web/target/docker/172.17.4.50/5000/springboot-osev3-examples/web/tmp/docker-build.tar
+[INFO] DOCKER> [172.17.4.50:5000/springboot-osev3-examples:web]: Created docker-build.tar in 8 seconds 
+[INFO] DOCKER> [172.17.4.50:5000/springboot-osev3-examples:web]: Built image sha256:a3af4
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building repositories-mem 0.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ repositories-mem ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ repositories-mem ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ repositories-mem ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/repositories-mem/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ repositories-mem ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.18.1:test (default-test) @ repositories-mem ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --- maven-jar-plugin:2.6:jar (default-jar) @ repositories-mem ---
+[INFO] Building jar: /Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/repositories-mem/target/repositories-mem.jar
+[INFO] 
+[INFO] --- spring-boot-maven-plugin:1.5.4.RELEASE:repackage (default) @ repositories-mem ---
+[INFO] 
+[INFO] --- maven-install-plugin:2.5.2:install (default-install) @ repositories-mem ---
+[INFO] Installing /Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/repositories-mem/target/repositories-mem.jar to /home/vagrant/.m2/repository/com/openshift/evangelists/microservices-demo-springboot/repositories-mem/0.0.1-SNAPSHOT/repositories-mem-0.0.1-SNAPSHOT.jar
+[INFO] Installing /Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/repositories-mem/pom.xml to /home/vagrant/.m2/repository/com/openshift/evangelists/microservices-demo-springboot/repositories-mem/0.0.1-SNAPSHOT/repositories-mem-0.0.1-SNAPSHOT.pom
+[INFO] 
+[INFO] --- docker-maven-plugin:0.21.0:build (docker-build) @ repositories-mem ---
+[INFO] Copying files to /Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/repositories-mem/target/docker/172.17.4.50/5000/springboot-osev3-examples/repositories-mem/build/maven
+[INFO] Building tar: /Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/repositories-mem/target/docker/172.17.4.50/5000/springboot-osev3-examples/repositories-mem/tmp/docker-build.tar
+[INFO] DOCKER> [172.17.4.50:5000/springboot-osev3-examples:repositories-mem]: Created docker-build.tar in 3 seconds 
+[INFO] DOCKER> [172.17.4.50:5000/springboot-osev3-examples:repositories-mem]: Built image sha256:bd3d5
+[INFO] DOCKER> [172.17.4.50:5000/springboot-osev3-examples:repositories-mem]: Removed old image sha256:e6468
+[INFO] 
+[INFO] --- spring-boot-maven-plugin:1.5.4.RELEASE:repackage (default-cli) @ repositories-mem ---
+[INFO] 
+[INFO] --- docker-maven-plugin:0.21.0:build (default-cli) @ repositories-mem ---
+[INFO] Copying files to /Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/repositories-mem/target/docker/172.17.4.50/5000/springboot-osev3-examples/repositories-mem/build/maven
+[INFO] Building tar: /Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/repositories-mem/target/docker/172.17.4.50/5000/springboot-osev3-examples/repositories-mem/tmp/docker-build.tar
+[INFO] DOCKER> [172.17.4.50:5000/springboot-osev3-examples:repositories-mem]: Created docker-build.tar in 2 seconds 
+[INFO] DOCKER> [172.17.4.50:5000/springboot-osev3-examples:repositories-mem]: Built image sha256:bd3d5
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building microservices-demo 0.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-install-plugin:2.4:install (default-install) @ microservices-demo-springboot ---
+[INFO] Installing /Users/fanhongling/Downloads/workspace/src/github.com/tangfeixiong/osev3-examples/spring-boot/sample-microservices-springboot/pom.xml to /home/vagrant/.m2/repository/com/openshift/evangelists/microservices-demo-springboot/0.0.1-SNAPSHOT/microservices-demo-springboot-0.0.1-SNAPSHOT.pom
+[INFO] 
+[INFO] --- spring-boot-maven-plugin:2.0.0.M2:repackage (default-cli) @ microservices-demo-springboot ---
+[INFO] 
+[INFO] --- docker-maven-plugin:0.21.0:build (default-cli) @ microservices-demo-springboot ---
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary:
+[INFO] 
+[INFO] web ................................................ SUCCESS [01:10 min]
+[INFO] repositories-mem ................................... SUCCESS [ 41.947 s]
+[INFO] microservices-demo ................................. SUCCESS [  2.966 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 02:00 min
+[INFO] Finished at: 2017-07-22T10:04:55+00:00
+[INFO] Final Memory: 58M/494M
+[INFO] ------------------------------------------------------------------------
+```
+
 With `mvn deploy` and local repository
 ```
 [vagrant@localhost sample-microservices-springboot]$ mvn deploy

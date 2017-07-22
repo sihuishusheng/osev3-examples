@@ -2,40 +2,96 @@ version: '2'
 
 services:
   repositories-mem:
-    restart: always
+    command:
+    - java
+    - -Djava.security.egd=file:/dev/./urandom
+    - -Dspring.profiles.active=demo
+    - $JAVA_OPTIONS
+    - -jar
+    - /repositories-mem.jar
+    - --server.port=$SERVER_PORT
+    environment:
+    - JAVA_OPTIONS=-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=128m
+    - SERVER_PORT=9091
     image: 172.17.4.50:5000/springboot-osev3-examples:repositories-mem
-    # environment:
-    # - JAVA_OPTIONS=-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=128m
-    # - SERVER_PORT=9091
-    # command:
-    # - java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTIONS -jar /repositories-mem.jar --server.port=$SERVER_PORT
-    # volumes:
-    # - /path/from/your/host:/path/to/your/container
+    restart: always
 
   web:
-    build:
-      context: ./web
-      dockerfile: Dockerfile.oracle-server-jre1.8
-      # args:
-      #   name: value
-      labels:
-        project: "example"
-    image: 172.17.4.50:5000/springboot-osev3-examples:web
+    command:
+    - java
+    - -Djava.security.egd=file:/dev/./urandom
+    - -Dspring.profiles.active=demo
+    - $JAVA_OPTIONS
+    - -jar
+    - /repositories-mem.jar
+    - --remoteHost=repositories-mem
+    - --remotePort=909
+    - --server.port=$SERVER_PORT
     environment:
     # - JAVA_OPTIONS=-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=128m
     # - SERVER_PORT=8091
     - REMOTEHOST=repositories-mem
     - REMOTEPORT=9091
-    # command:
-    # - java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTIONS -jar /repositories-mem.jar --remoteHost=localhost --remotePort=9091 --server.port=$SERVER_PORT
+    image: 172.17.4.50:5000/springboot-osev3-examples:web
     ports:
     - "8091:8091"
     restart: always
+        
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+    - "5672:5672"
+    - "15672:15672"
+    restart: always
+ 
+  configserver:
+    build:
+      context: ./spring-cloud-config/configserver/target
+      dockerfile: ./spring-cloud-config/configserver/src/main/docker/Dockerfile
+      # args:
+      #   name: value
+      # labels:
+      #   project: "spring-cloud-config/configserver"
+    command:
+    - "-Dspring.profiles.active=demo"
+    image: springcloud/configserver
+    ports:
+    - "8888:8888"
+    restart: always
     # volumes:
-    # - /path/from/your/host:/path/to/your/container
+    # - /path/from/your/host:/target
 
   eureka:
-    image: 172.17.4.50:5000/eureka
+    build:
+      context: ./spring-cloud-netflix/eureka/target
+      dockerfile: ./spring-cloud-netflix/eureka/src/main/docker/Dockerfile
+      # args:
+      #   name: value
+      # labels:
+      #   project: "spring-cloud-netflix/eureka"
+    command:
+    - "-Dspring.profiles.active=demo"
+    image: springcloud/eureka
     ports:
     - "8761:8761"
     restart: always
+    # volumes:
+    # - /path/from/your/host:/target
+
+  zuul-server:
+    build:
+      context: ./spring-cloud-netflix/zuul-server/target
+      dockerfile: ./spring-cloud-netflix/zuul-server/src/main/docker/Dockerfile
+      # args:
+      #   name: value
+      # labels:
+      #   project: "spring-cloud-netflix/zuul-server"
+    command:
+    - "-Dspring.profiles.active=demo"
+    image: springcloud/zuul-server
+    network_mode: "host"
+    ports:
+    - "8765:8765"
+    restart: always
+    # volumes:
+    # - /path/from/your/host:/target

@@ -8,10 +8,19 @@ import com.openshift.evangelists.microservices.web.api.Message;
 import com.openshift.evangelists.microservices.web.api.MessageRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.convert.converter.Converter;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
+@EnableDiscoveryClient
+//@EnableCircuitBreaker
+//@EnableFeignClients
+@EnableSwagger2
 public class SampleWebUIApplication {
 
     @Bean

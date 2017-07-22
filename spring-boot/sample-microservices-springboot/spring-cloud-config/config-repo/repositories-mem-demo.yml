@@ -1,0 +1,60 @@
+### App defined
+messages:
+- text: foo
+  summary: the 1st placeholder name
+- text: bar
+  summary: the 2nd placeholder name
+- text: baz
+  summary: the 3rd placeholder name
+- text: qux
+  summary: the 4th placeholder name
+---
+### application.properties
+server:
+  port: 9091
+
+# management:
+#   port: 9091
+#   address: 127.0.0.1
+
+info:
+  name: repositories-mem
+  description: repositories of memory
+  version: 1.0
+
+logging:
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} [trace=%X{X-B3-TraceId:-},span=%X{X-B3-SpanId:-}] [%15.15t] %-40.40logger{39}: %m%n'
+---
+### Netflix
+eureka:
+  password: s3cr3t
+  instance:
+    hostname: eureka
+    metadataMap:
+      cluster: MYCLUSTER
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:8761/eureka/
+
+# http://localhost:8500/v1/catalog/service/microservice-two?pretty=true
+spring:
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        # For the local environment to work ... (remove for real life)
+        healthCheckUrl: http://localhost:${server.port}/health
+        healthCheckInterval: 30s
+        tags: cluster=MYCLUSTER,availability-zone-A
+  jackson:
+    serialization:
+      write_dates_as_timestamps: false
+---
+### Swagger 2
+springfox:
+  documentation:
+    swagger:
+      v2:
+        path: /api-docs

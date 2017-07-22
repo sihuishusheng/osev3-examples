@@ -25,7 +25,7 @@ ext {
     dockerRegistryEmail = project.hasProperty('dockerRegistryEmail') ? project.dockerRegistryEmail : ''
 
     dockerCertPath = '/etc/docker/certs.d/172.17.4.50:5000'
-    dockerfilePath = 'docker/Dockerfile.java-openjdk1.8-headless'
+    dockerfilePath = 'src/main/docker/gradle-docker/Dockerfile.java-openjdk1.8-headless'
     // dockerHub = 'https://index.docker.io/v1/'
     dockerHub = 'https://172.17.4.50:5000'
     dockerImageName = '172.17.4.50:5000/springboot-osev3-examples'
@@ -254,7 +254,7 @@ task dockerPush(type: DockerPushImage) {
     tag = "${dockerImageTag}"
 }
 
-task buildDocker(type: se.transmode.gradle.plugins.docker.DockerTask, dependsOn: copyTask) {
+task anotherDockerBuild(type: se.transmode.gradle.plugins.docker.DockerTask, dependsOn: copyTask) {
     dockerfile = 'Dockerfile'
     // registry = '172.17.4.50:5000'
     // applicationName = "springboot-osev3-examples"

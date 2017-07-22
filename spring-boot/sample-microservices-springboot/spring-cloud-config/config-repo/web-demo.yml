@@ -1,0 +1,71 @@
+### App defined
+remoteHost: repositories-mem
+remotePort: 9091
+---
+### application.properties
+# Allow Thymeleaf templates to be reloaded at dev time
+spring:
+  thymeleaf:
+    cache: false
+
+server:
+  tomcat:
+    access_log_enabled: true
+    basedir: target/tomcat
+  port: 8091
+#
+# management:
+#   port: 8091
+#   address: 127.0.0.1
+#
+info:
+  name: web
+  description: web
+  version: 1.0
+
+logging:
+  level:
+    org.springframework.cloud: DEBUG
+    com.ecwid.consul: TRACE
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} [trace=%X{X-B3-TraceId:-},span=%X{X-B3-SpanId:-}] [%15.15t] %-40.40logger{39}: %m%n'
+---
+### Netflix
+eureka:
+  password: s3cr3t
+  instance:
+    hostname: eureka
+    metadataMap:
+      cluster: MYCLUSTER
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:8761/eureka/
+
+# http://localhost:8500/v1/catalog/service/microservice-one?pretty=true
+spring:
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        # For the local environment to work ... (remove for real life)
+        healthCheckUrl: "http://localhost:${server.port}/health"
+        healthCheckInterval: 30s
+        tags: cluster=MYCLUSTER,availability-zone-A
+        serverListQueryTags: { microservice-two : availability-zone-A }
+
+# https://github.com/Netflix/Hystrix/wiki/Configuration
+hystrix:
+  command:
+    testCallTwo:
+      execution:
+        isolation.thread.timeoutInMilliseconds: 500
+      circuitBreaker:
+        requestVolumeThreshold: 2    # For testing purposes
+---
+### Swagger 2
+springfox:
+  documentation:
+    swagger:
+      v2:
+        path: /api-docs

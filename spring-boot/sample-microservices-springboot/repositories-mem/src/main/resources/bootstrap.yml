@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: repositories-mem
+  cloud:
+    config:
+      uri: ${SPRING_CONFIG_URI:http://localhost:8888} # legacy runtime
+---
+### via docker/docker-compose
+spring:
+  profiles:
+    active: demo,development
+  label: spring-cloud-netflix
+  cloud:
+    config:
+      uri: http://configserver:${config.port:8888}
+---
+### via Kubernetes
+spring:
+  profiles:
+    active: qa
+  cloud:
+    config:
+      uri: ${SPRING_CONFIG_URI:http://spring-cloud-config-server.default.svc.cluster.local:8888}

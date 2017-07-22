@@ -1,18 +1,19 @@
 # FROM openshift/base-centos7
 FROM docker.io/centos:centos7
 LABEL maintainer="tangfeixiong" mailto="tangfx128@gmail.com" \
-    project="https://github.com/tangfeixiong/osev3-examples/tree/cicd/spring-boot/sample-microservices-springboot" name="repositories-mem"
+    project="osev3-examples" name="sample-microservices-springboot"
 
-# ARG localrepo_url=http://172.17.4.50:48080/99-mirror/http0x3A0x2F0x2Fmirror.centos.org0x2Fcentos/centos7-local.repo
-ARG app_version=0.0.1
-
+# ARG localRepoUrl=http://172.17.4.50:48080/99-mirror/http0x3A0x2F0x2Fmirror.centos.org0x2Fcentos/centos7-local.repo
+ARG appVersion=0.0.1
+    
 ENV JAVA_HOME="/opt/java" \
     JAVA_OPTIONS="-Xms128m -Xmx512m -XX:PermSize=128m -XX:MaxPermSize=256m" \
     SERVER_PORT=9091
 
-COPY /repositories-mem-${app_version}.jar /repositories-mem.jar
+COPY /build/libs/repositories-mem-${appVersion:-0.0.1}.jar /
 
 RUN set -x \
+    && curl -jkSL $localRepoUrl -o /etc/yum.repos.d/local.repo \
     && install_pkgs=" \
         tar \
         unzip \
@@ -21,12 +22,7 @@ RUN set -x \
         lsof \
         java-1.8.0-openjdk-headless \
     " \
-    && if [[ -z $localrepo_url ]]; then \
-        yum install -y $install_pkgs; \
-    else \
-        curl -jkSL $localrepo_url -o /etc/yum.repos.d/local.repo; \
-        yum install -y --disablerepo=\* --enablerepo=localbase,localrepo-\* $install_pkgs; \
-    fi \
+    && yum install -y --disablerepo=\* --enablerepo=localbase,localrepo-\* $install_pkgs \
     && yum clean all -y \
     && export JAVA_OPTIONS="-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=128m"
 

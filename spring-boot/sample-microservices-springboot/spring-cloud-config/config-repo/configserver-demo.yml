@@ -1,0 +1,74 @@
+server:
+  port: 8888
+
+management:
+  context-path: /admin
+  
+logging:
+  level:
+    com.netflix.discovery: 'OFF'
+    org.springframework.cloud: 'DEBUG'
+    
+eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+    statusPageUrlPath: /admin/info
+    healthCheckUrlPath: /admin/health
+
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          # uri: https://github.com/spring-cloud-samples/config-repo
+          uri: https://github.com/tangfeixiong/osev3-examples
+          basedir: spring-boot/sample-microservices-springboot/spring-cloud-config/config-repo
+          searchPaths: '{application}'
+          force-pull: true
+          repos:
+            development:
+              pattern:  # {application}/{profile}
+                - '*/demo'
+                - '*/development'
+              uri: http://172.17.4.50:10080/root/osev3-examples
+              basedir: spring-boot/sample-microservices-springboot/spring-cloud-config/config-repo
+              username: root
+              password: password
+              force-pull: true
+            staging:
+              pattern:
+                - '*/qa'
+                - '*/production'
+              uri: https://github.com/tangfeixiong/osev3-examples
+              basedir: spring-boot/sample-microservices-springboot/spring-cloud-config/config-repo
+            special:
+              pattern: 
+              - 'special*/dev*'
+              - '*special*/dev*'
+              uri: https://github.com/spring-cloud-samples/config-repo
+            local:
+              pattern: 
+              - 'local*'
+              uri: file://${user.home}/Downloads/99-mirror/spring-cloud-config/config-repo
+---
+spring:
+  # profiles: cloudfoundry
+  # profiles: kubernetes
+  profiles: 
+    active: demo,development
+  label: spring-cloud-netflix
+
+eureka:
+  password: s3cr3t
+  # password: password
+  instance:
+    hostname: eureka
+    # hostname: ${vcap.application.uris[0]}
+    # nonSecurePort: 80
+    metadataMap:
+      cluster: MYCLUSTER
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:8761/eureka/
+      # defaultZone: ${vcap.services.${PREFIX:}eureka.credentials.uri:http://user:${eureka.password:}@${PREFIX:}eureka.${application.domain:cfapps.io}}/eureka/
+

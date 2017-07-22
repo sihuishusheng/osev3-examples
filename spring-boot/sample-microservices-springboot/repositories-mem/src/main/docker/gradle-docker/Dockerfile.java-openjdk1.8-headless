@@ -1,0 +1,39 @@
+# FROM openshift/base-centos7
+FROM docker.io/centos:centos7
+LABEL maintainer="tangfeixiong <tangfx128@gmail.com>" \
+    project="https://github.com/tangfeixiong/osev3-examples/tree/cicd/spring-boot/sample-microservices-springboot" \
+    name="repositories-mem"
+
+# ARG localRepoUrl=http://172.17.4.50:48080/99-mirror/http0x3A0x2F0x2Fmirror.centos.org0x2Fcentos/centos7-local.repo
+ARG appVersion=0.0.1 \
+    javaOpt="-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=128m"
+
+ENV JAVA_HOME="/opt/java" \
+    JAVA_OPTIONS="-Xms128m -Xmx512m -XX:PermSize=128m -XX:MaxPermSize=256m" \
+    SERVER_PORT=9091
+
+COPY /repositories-mem-${appVersion}.jar /repositories-mem.jar
+
+RUN set -x \
+    && install_pkgs=" \
+        tar \
+        unzip \
+        bc \
+        which \
+        lsof \
+        java-1.8.0-openjdk-headless \
+    " \
+    && if [[ -z $localRepoUrl ]]; then \
+        yum install -y $install_pkgs; \
+    else \
+        curl -jkSL $localRepoUrl -o /etc/yum.repos.d/local.repo; \
+        yum install -y --disablerepo=\* --enablerepo=localbase,localrepo-\* $install_pkgs; \
+    fi \
+    && yum clean all -y
+
+# This default user is created in the openshift/base-centos7 image
+# USER 1001
+
+EXPOSE 9091
+
+CMD java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTIONS -jar /repositories-mem.jar --server.port=$SERVER_PORT

@@ -1,0 +1,48 @@
+# FROM openshift/base-centos7
+FROM docker.io/centos:centos7
+LABEL maintainer="tangfeixiong <tangfx128@gmail.com>" \
+    project="https://github.com/tangfeixiong/osev3-examples/tree/master/spring-boot/sample-microservices-springboot" \
+    name="web"
+
+# Oracle Java Archive:
+# - server JRE 7 "http://download.oracle.com/otn-pub/java/jdk/7u80-b15/server-jre-7u80-linux-x64.tar.gz"
+# - server JRE 8 "http://download.oracle.com/otn-pub/java/jdk/8u112-b15/server-jre-8u112-linux-x64.tar.gz"
+ARG javaPkg="http://172.17.4.50:48080/99-mirror/http0x3A0x2F0x2Fdownload.oracle.com/otn-pub0x2Fjava0x2Fjdk0x2F8u112-b15/server-jre-8u112-linux-x64.tar.gz"
+ARG javaOpt="-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=128m"
+
+COPY /maven/web.jar /
+
+ENV JAVA_HOME="/opt/java" \
+    PATH=$PATH:/opt/java/bin \
+    JAVA_OPTIONS="${javaOpt:-'-Xms128m -Xmx512m -XX:PermSize=128m -XX:MaxPermSize=256m'}" \
+    SERVER_PORT="8091" \
+    REMOTEHOST="localhost" \
+    REMOTEPORT="9091"
+
+RUN set -x \
+    && temp_dir=/tmp/build \
+# Install Oracle Server JRE
+    && mkdir -p $JAVA_HOME \
+    && java_pkg_dest="${javaPkg:-'http://download.oracle.com/otn-pub/java/jdk/8u112-b15/server-jre-8u112-linux-x64.tar.gz'}" \
+    && if [[ -f $temp_dir/$java_pkg_dest ]]; then \
+        tar -C $JAVA_HOME --strip-components=1 -zxf $temp_dir/$java_pkg_dest; \
+        rm -f $temp_dir/$java_pkg_dest; \
+    elif [[ ! "$java_pkg_dest" =~ https?://download\.oracle\.com/?.* ]]; then \
+        curl -jkSL ${java_pkg_dest//%/%25} \
+            | gunzip -c - \
+            | tar -x -C $JAVA_HOME --strip-components=1; \
+    else \
+        curl -jkSLH "Cookie: oraclelicense=accept-securebackup-cookie; " "$java_pkg_dest" \
+            | gunzip \
+            | tar -x -C "$JAVA_HOME" --strip-components=1; \
+    fi \
+# Finally
+    && rm -rf $temp_dir
+
+# This default user is created in the openshift/base-centos7 image
+# USER 1001
+
+EXPOSE 8091
+
+# CMD java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTIONS -jar /web.jar --server.port=$SERVER_PORT --remoteHost=$REMOTEHOST --remotePort=$REMOTEPORT
+CMD java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTIONS -jar /web.jar

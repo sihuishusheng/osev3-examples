@@ -1,0 +1,40 @@
+info:
+  component: Zuul Server
+  
+endpoints:
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+  health:
+    sensitive: false
+
+zuul:
+  ignoredServices: '*'
+  routes:
+    zuulserver: /self/**
+    ### test
+    gofileserver:
+      path: /gofileserver/**
+      url: http://172.17.4.50:48080/
+    gitlab:
+      path: /gitlab/**
+      url: http://172.17.4.50:10080/
+    nexus:
+      path: /nexus/**
+      url: http://172.17.4.50:8081/
+    registry: 
+      path: /registry/**
+      url: https://172.17.4.50:5000/
+    ### demo
+    repositoriesMem:
+      path: /repositories-mem
+      serviceId: repositories_mem
+
+server:
+  port: 8765
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework.web: DEBUG

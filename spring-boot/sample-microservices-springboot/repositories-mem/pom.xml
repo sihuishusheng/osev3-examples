@@ -6,8 +6,8 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.3.RELEASE</version>
-        <relativePath/>
+        <version>1.5.4.RELEASE</version>
+        <relativePath /> <!-- lookup parent from repository -->
     </parent>
 
 	<groupId>com.openshift.evangelists.microservices-demo-springboot</groupId>
@@ -18,12 +18,35 @@
 	<description>Demo project for Spring Boot</description>
 
     <properties>
-	    <docker-image>docker.io/tangfeixiong/osev3-examples-springboot-microservice:repositories-mem</docker-image>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <spring-cloud.version>Brixton.RELEASE</spring-cloud.version>
+	    <docker-image>docker.io/tangfeixiong/osev3-examples:springboot-${project.artifactId}</docker-image>
+		<image.namespace>172.17.4.50:5000</image.namespace>
+		<image.name>springboot-osev3-examples</image.name>
+		<start-class>com.openshift.evangelists.microservices.repository.InMemoryRepositoryApplication</start-class>
+	    <javaPkgDest>http://172.17.4.50:48080/99-mirror/http0x3A0x2F0x2Fdownload.oracle.com/otn-pub0x2Fjava0x2Fjdk0x2F8u112-b15/server-jre-8u112-linux-x64.tar.gz</javaPkgDest>
+        <springfox.version>2.4.0</springfox.version>
     </properties>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<!--<version>Camden.BUILD-SNAPSHOT</version>-->
+				<!--<version>Dalston.BUILD-SNAPSHOT</version>-->
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-rest</artifactId>
@@ -32,9 +55,35 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+	    <dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-eureka</artifactId>
+        </dependency>
+        <!-- spring cloud sleuth for log correlation -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-sleuth</artifactId>
+        </dependency>
+        <!-- API documentation using swagger.io -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox.version}</version>
+        </dependency>
+        <!-- java.time serialization -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.4.0</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -80,17 +129,48 @@
 			 <configuration>
 			   <images>
 			     <image>
-			       <name>${docker-image}</name>
+			       <name>${image.namespace}/${image.name}:${project.artifactId}</name>
 			       <build>
-			         <dockerFileDir>${project.basedir}/docker</dockerFileDir>
-					 <dockerFile>Dockerfile.java-openjdk1.8-headless</dockerFile>
 			         <assembly>
-                       <descriptorRef>artifact-with-dependencies</descriptorRef>
+					   <!--<descriptorRef>artifact-with-dependencies</descriptorRef>-->
+                       <descriptorRef>artifact</descriptorRef>
                      </assembly>
+			         <!--<dockerFileDir>${project.basedir}/src/main/docker/io-dot-fabric8</dockerFileDir>-->
+				     <dockerFileDir>io-dot-fabric8</dockerFileDir>
+					 <!--<dockerFile>Dockerfile.oracle-server-jre1.8</dockerFile>-->
+				     <args>
+				         <javaPkg>${javaPkgDest}</javaPkg>
+					 </args>
+					 <nocache>true</nocache>
 			       </build>
 			     </image>
 			   </images>
 			 </configuration>
+			 <executions>
+			   <execution>
+			     <id>docker-build</id>
+			     <goals>
+			       <goal>build</goal>
+			     </goals>
+			   </execution>
+			 </executions>
+			</plugin>
+			
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.4.13</version>
+				<configuration>
+					<imageName>${docker-image}</imageName>
+					<dockerDirectory>src/main/docker/com-dot-spotify</dockerDirectory>
+					<resources>
+						<resource>
+							<targetPath>/</targetPath>
+							<directory>${project.build.directory}</directory>
+							<include>${project.build.finalName}.jar</include>
+						</resource>
+					</resources>
+				</configuration>
 			</plugin>
         </plugins>
     </build>
