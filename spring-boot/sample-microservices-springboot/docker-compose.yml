@@ -6,13 +6,16 @@ services:
     - java
     - -Djava.security.egd=file:/dev/./urandom
     - -Dspring.profiles.active=demo
-    - $JAVA_OPTIONS
+    - -Xms128m
+    - -Xmx256m
+    - -XX:PermSize=128m
+    - -XX:MaxPermSize=128m
     - -jar
     - /repositories-mem.jar
-    - --server.port=$SERVER_PORT
-    environment:
-    - JAVA_OPTIONS=-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=128m
-    - SERVER_PORT=9091
+    - --server.port=9091
+    # environment:
+    #   - JAVA_OPTIONS=-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=128m
+    #   - SERVER_PORT=9091
     image: 172.17.4.50:5000/springboot-osev3-examples:repositories-mem
     restart: always
 
@@ -21,12 +24,15 @@ services:
     - java
     - -Djava.security.egd=file:/dev/./urandom
     - -Dspring.profiles.active=demo
-    - $JAVA_OPTIONS
+    - -Xms128m
+    - -Xmx256m
+    - -XX:PermSize=128m
+    - -XX:MaxPermSize=128m
     - -jar
-    - /repositories-mem.jar
+    - /web.jar
+    - --server.port=8091
     - --remoteHost=repositories-mem
-    - --remotePort=909
-    - --server.port=$SERVER_PORT
+    - --remotePort=9091
     environment:
     # - JAVA_OPTIONS=-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=128m
     # - SERVER_PORT=8091
@@ -35,7 +41,7 @@ services:
     image: 172.17.4.50:5000/springboot-osev3-examples:web
     ports:
     - "8091:8091"
-    restart: always
+    # restart: always
         
   rabbitmq:
     image: rabbitmq:3-management
@@ -57,7 +63,7 @@ services:
     image: springcloud/configserver
     ports:
     - "8888:8888"
-    restart: always
+    # restart: always
     # volumes:
     # - /path/from/your/host:/target
 
@@ -74,7 +80,7 @@ services:
     image: springcloud/eureka
     ports:
     - "8761:8761"
-    restart: always
+    # restart: always
     # volumes:
     # - /path/from/your/host:/target
 
@@ -88,10 +94,16 @@ services:
       #   project: "spring-cloud-netflix/zuul-server"
     command:
     - "-Dspring.profiles.active=demo"
+    extra_hosts:
+    - "configserver:127.0.0.1"
+    - "eureka:127.0.0.1"
+    - "rabbitmq:127.0.0.1"
+    - "repositories-mem:127.0.0.1"
+    - "web:127.0.0.1"
     image: springcloud/zuul-server
     network_mode: "host"
     ports:
     - "8765:8765"
-    restart: always
+    # restart: always
     # volumes:
     # - /path/from/your/host:/target

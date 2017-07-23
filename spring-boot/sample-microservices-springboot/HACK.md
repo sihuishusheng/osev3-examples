@@ -1889,3 +1889,30 @@ Removing samplemicroservicesspringboot_repositories-mem_1 ... done
 Removing samplemicroservicesspringboot_web_1 ... done
 Removing network samplemicroservicesspringboot_default
 ```
+
+### docker compose info
+
+Containers
+```
+[vagrant@localhost ~]$ docker ps
+CONTAINER ID        IMAGE                                                         COMMAND                  CREATED              STATUS                          PORTS                                                                                        NAMES
+f37c61565d96        rabbitmq:3-management                                         "docker-entrypoint.sh"   About a minute ago   Up About a minute               4369/tcp, 5671/tcp, 0.0.0.0:5672->5672/tcp, 15671/tcp, 25672/tcp, 0.0.0.0:15672->15672/tcp   osev3examplesspringcloudnetflix_rabbitmq_1
+2275836de7fd        springcloud/configserver                                      "java -Djava.security"   About a minute ago   Up 19 seconds                   0.0.0.0:8888->8888/tcp                                                                       osev3examplesspringcloudnetflix_configserver_1
+ca8630eb970f        springcloud/zuul-server                                       "java -Djava.security"   About a minute ago   Up Less than a second                                                                                                        osev3examplesspringcloudnetflix_zuul-server_1
+33622a41ed7e        springcloud/eureka                                            "java -Djava.security"   About a minute ago   Up About a minute               0.0.0.0:8761->8761/tcp                                                                       osev3examplesspringcloudnetflix_eureka_1
+4c035bc80b28        172.17.4.50:5000/springboot-osev3-examples:repositories-mem   "java -Djava.security"   About a minute ago   Restarting (1) 41 seconds ago   9091/tcp                                                                                     osev3examplesspringcloudnetflix_repositories-mem_1
+c6c4edb2374f        172.17.4.50:5000/springboot-osev3-examples:web                "java -Djava.security"   About a minute ago   Restarting (1) 43 seconds ago   0.0.0.0:8091->8091/tcp                                                                       osev3examplesspringcloudnetflix_web_1
+[vagrant@localhost ~]$ docker network ls
+NETWORK ID          NAME                                      DRIVER
+3ba1465afaf1        cbr0                                      bridge              
+cee016075c51        gitlab_default                            bridge              
+362bb5fba2ae        none                                      null                
+ca4fcbcd31f6        host                                      host                
+cc4d8974a9be        osev3examplesspringcloudnetflix_default   bridge              
+c2eb7c874109        bridge                                    bridge              
+```
+
+Logs
+```
+
+```
