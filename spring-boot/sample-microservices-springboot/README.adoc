@@ -1,4 +1,14 @@
-=
+= Development
+
+Spring Cloud Config
+
+Spring Cloud Netflix
+
+Build the project
+
+== Spring Cloud Config
+
+== Spring Cloud Netflix
 
 == Build the project
 Building the project will create 2 applications (jars)
