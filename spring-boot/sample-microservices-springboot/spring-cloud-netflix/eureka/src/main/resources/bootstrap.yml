@@ -1,10 +1,9 @@
 spring:
   application:
-    name: web
+    name: eureka
   cloud:
     config:
-      uri: ${SPRING_CONFIG_URI:http://localhost:8888} # legacy runtime
-
+      uri: ${CONFIG_SERVER_URL:http://localhost:8888} # legacy runtime
 ---
 ### via docker/docker-compose
 spring:
@@ -14,7 +13,6 @@ spring:
   cloud:
     config:
       uri: http://configserver:${config.port:8888}
-
 ---
 ### via Kubernetes
 spring:
@@ -22,4 +20,4 @@ spring:
     active: qa
   cloud:
     config:
-      uri: ${SPRING_CONFIG_URI:http://spring-cloud-config-server.default.svc.cluster.local:8888}
+      uri: ${CONFIG_SERVER_URL:http://spring-cloud-config-server.default.svc.cluster.local:8888}

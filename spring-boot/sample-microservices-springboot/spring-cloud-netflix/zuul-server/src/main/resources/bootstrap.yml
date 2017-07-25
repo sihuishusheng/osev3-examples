@@ -1,0 +1,49 @@
+# https://stackoverflow.com/questions/32997352/what-is-the-diference-between-putting-a-property-on-application-yml-or-bootstrap
+#
+# bootstrap.yml is loaded before application.yml.
+#
+# It is typically used for the following:
+#
+#   when using Spring Cloud Config Server, you should specify spring.application.name and spring.cloud.config.server.git.uri inside bootstrap.yml
+#
+#   some encryption/decryption information
+#
+# Technically, bootstrap.yml is loaded by a parent Spring ApplicationContext. That parent ApplicationContext is loaded before the one that uses application.yml.
+#
+# http://cloud.spring.io/spring-cloud-static/spring-cloud.html
+#
+# You can disable the bootstrap process completely by setting spring.cloud.bootstrap.enabled=false (e.g. in System properties).
+
+spring:
+  application:
+    name: zuulserver
+  cloud:
+    config:
+      uri: ${SPRING_CONFIG_URI:http://localhost:8888}
+      # uri: ${vcap.services.${PREFIX:}configserver.credentials.uri:http://user:password@localhost:8888}
+      # uri: ${KUBERNETES_MASTER:http://localhost:8080}
+---
+# https://cloud.spring.io/spring-cloud-config/spring-cloud-config.html
+#
+# Where do you want to store the configuration data for the Config Server? The strategy that governs this behaviour is the EnvironmentRepository, serving Environment objects. This Environment is a shallow copy of the domain from the Spring Environment (including propertySources as the main feature).
+#
+# https://stackoverflow.com/questions/36934873/set-profile-on-bootstrap-yml-in-spring-cloud-to-target-different-config-server
+#
+# To activate the profile, start the service with the following property
+# -Dspring.profiles.active=development    
+
+spring:
+  profiles:
+    active: demo,development
+  label: spring-cloud-netflix
+  cloud:
+    config:
+      uri: ${SPRING_CONFIG_URI:http://configserver:8888}
+
+---
+spring:
+  profiles:
+    active: qa
+  cloud:
+    config:
+      uri: ${SPRING_CONFIG_URI:http://spring-cloud-config-server.default.svc.cluster.local:8888}

@@ -94,12 +94,12 @@ services:
       #   project: "spring-cloud-netflix/zuul-server"
     command:
     - "-Dspring.profiles.active=demo"
-    extra_hosts:
-    - "configserver:127.0.0.1"
-    - "eureka:127.0.0.1"
-    - "rabbitmq:127.0.0.1"
-    - "repositories-mem:127.0.0.1"
-    - "web:127.0.0.1"
+    # extra_hosts:
+    # - "configserver:127.0.0.1"
+    # - "eureka:127.0.0.1"
+    # - "rabbitmq:127.0.0.1"
+    # - "repositories-mem:127.0.0.1"
+    # - "web:127.0.0.1"
     image: springcloud/zuul-server
     network_mode: "host"
     ports:
